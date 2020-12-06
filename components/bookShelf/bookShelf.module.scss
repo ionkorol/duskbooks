@@ -1,0 +1,20 @@
+.container {
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 20px 0;
+}
+
+.list {
+  display: flex;
+  justify-content: space-between;
+  div {
+    width: 15%;
+  }
+}
+
+.title {
+  font-weight: bold;
+}

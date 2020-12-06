@@ -1,0 +1,53 @@
+@import "../../styles/variables.scss";
+
+.container {
+  width: 300px;
+  background-color: rgba(128, 128, 128, 0.07);
+  padding: 20px;
+}
+
+.price {
+  display: flex;
+  padding-bottom: 20px;
+  border-bottom: 2px solid rgba(128, 128, 128, 0.2);
+
+  .current {
+    display: flex;
+    color: $secondary;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-right: 5px;
+  }
+  .initial {
+    display: flex;
+    color: gray;
+    align-self: center;
+  }
+  .location {
+    margin-left: auto;
+    align-self: center;
+  }
+}
+
+.perks {
+  padding: 5px 0;
+  border-bottom: 2px solid rgba(128, 128, 128, 0.2);
+
+  > div {
+    display: flex;
+    align-items: center;
+
+    img {
+      margin-right: 5px;
+    }
+  }
+}
+
+.buttons {
+  padding-top: 10px;
+  button {
+    &:first-child {
+      margin-bottom: 10px;
+    }
+  }
+}
