@@ -10,9 +10,11 @@ const BookShelf: React.FC<Props> = (props) => {
   const [loading, setLoading] = useState(true);
 
   const getBooks = async () => {
-    const res = await fetch("http://127.0.0.1:5000/subject/HIS");
+    const res = await fetch("/api/subject/Fiction");
+
     const bookJson = await res.json();
-    setBooks(bookJson.books);
+
+    setBooks(bookJson.data);
     setLoading(false);
   };
 

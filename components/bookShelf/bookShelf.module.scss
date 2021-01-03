@@ -1,3 +1,5 @@
+@import "../../styles/variables.scss";
+
 .container {
 }
 
@@ -10,8 +12,8 @@
 .list {
   display: flex;
   justify-content: space-between;
-  div {
-    width: 15%;
+  @media screen and (max-width: 600px) {
+    flex-direction: column;
   }
 }
 

@@ -1,8 +1,9 @@
 import { GetServerSideProps } from "next";
 import React from "react";
 import { ADT, BookShelf, Layout } from "../../components";
+import { server } from "../../config";
 
-import styles from "../../styles/Book.module.scss";
+import styles from "./Book.module.scss";
 import { BookDataProp } from "../../utils/interfaces";
 
 interface Props {
@@ -15,7 +16,7 @@ const Book: React.FC<Props> = (props) => {
 
   return (
     <Layout small>
-      <div className={styles.main}>
+      <div className={styles.container}>
         <div className={styles.cover}>
           <img
             src={`http://images.amazon.com/images/P/${bookData.isbn10}.jpg`}
@@ -44,12 +45,12 @@ const Book: React.FC<Props> = (props) => {
                 <div className={styles.value}>{bookData.pages}</div>
               </div>
               <div className={styles.attribute}>
-                <div className={styles.key}>Publication Date:</div>
+                <div className={styles.key}>Date:</div>
                 <div className={styles.value}>{bookData.pubDate}</div>
               </div>
               <div className={styles.attribute}>
                 <div className={styles.key}>ISBN:</div>
-                <div className={styles.value}>{bookData.ean}</div>
+                <div className={styles.value}>{bookData.isbn13}</div>
               </div>
             </div>
             <div className={styles.column}>
@@ -86,13 +87,13 @@ const Book: React.FC<Props> = (props) => {
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const bookId = ctx.query.pid;
 
-  const res = await fetch(`http://127.0.0.1:5000/${bookId}`);
+  const res = await fetch(`${server}/api/product/${bookId}`);
 
   const bookJson = await res.json();
 
   return {
     props: {
-      bookData: bookJson,
+      bookData: bookJson.data,
     },
   };
 };

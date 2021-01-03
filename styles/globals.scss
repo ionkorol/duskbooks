@@ -8,6 +8,7 @@ body {
   margin: 0;
   font-family: "Share Tech", sans-serif;
   font-size: 1rem;
+  background-color: #f8f9fa;
 }
 
 input,
@@ -25,7 +26,8 @@ a {
   }
 }
 
-p {
+p,
+label {
   margin: 0;
 }
 
@@ -33,29 +35,37 @@ p {
   box-sizing: border-box;
 }
 
-button {
+button,
+input[type="submit"],
+input[type="button"] {
   color: white;
   padding: 10px 20px;
-  width: 100%;
+  width: fit-content;
   font-weight: bold;
   cursor: pointer;
   border-style: none;
-  background-color: $secondary;
-  background-image: linear-gradient(
-    30deg,
-    $secondary 0%,
-    $secondary 40%,
-    $secondary-light 40%,
-    $secondary-light 100%
-  );
+  background-color: $secondary-light;
   display: block;
-  transition: 0.5s;
 
   &:hover {
-    color: $primary;
+    color: $primary-light;
   }
 
   &:focus {
     outline: none;
   }
+
+  &:disabled {
+    background-color: rgba(128, 128, 128, 0.5);
+    &:hover {
+      color: white;
+      cursor: default;
+    }
+  }
+}
+
+input,
+select,
+textarea {
+  border: 1px solid rgba(128, 128, 128, 0.5);
 }

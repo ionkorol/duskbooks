@@ -1,24 +1,19 @@
+import Link from "next/link";
 import React from "react";
-import Button from "../button";
+import { useCart } from "../../hooks";
+import { BookDataProp } from "../../utils/interfaces";
 
 import styles from "./book.module.scss";
 
 interface Props {
-  bookData: {
-    isbn10: string;
-    ean: string;
-    title: string;
-    price: number;
-    salePrice: number;
-    stock: number;
-  };
+  bookData: BookDataProp;
   loading: boolean;
 }
 
 const Book: React.FC<Props> = (props) => {
   const { bookData, loading } = props;
 
-  console.log(loading , bookData)
+  const cart = useCart();
 
   return (
     <div className={styles.contaier}>
@@ -33,13 +28,18 @@ const Book: React.FC<Props> = (props) => {
         height={200}
         className={styles.cover}
       />
-      <a href={loading ? '#' : `/book/${bookData.ean}`} className={styles.link}>
-        {loading ? "Loading..." : bookData.title}
-      </a>
+      <Link
+        href={{
+          pathname: "/book/[pid]",
+          query: { pid: bookData ? bookData.isbn13 : null },
+        }}
+      >
+        <a className={styles.link}>{loading ? "Loading..." : bookData.title}</a>
+      </Link>
       <p className={styles.price}>
         $ {loading ? "loading price" : bookData.salePrice}
       </p>
-      <Button href="#">Add To Cart</Button>
+      <button onClick={() => cart.addItem(bookData.isbn13)}>Add To Cart</button>
     </div>
   );
 };

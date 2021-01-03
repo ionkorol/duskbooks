@@ -1,5 +1,4 @@
 import React from "react";
-import Button from "../button";
 import { useCart } from "../../hooks";
 
 import styles from "./adt.module.scss";
@@ -17,8 +16,8 @@ const ADT: React.FC<Props> = (props) => {
   return (
     <div className={styles.container}>
       <div className={styles.price}>
-  <p className={styles.current}>$ {bookData.salePrice}</p>
-        <p className={styles.initial}>$ {bookData.price}</p>
+        <p className={styles.current}>$ {bookData.salePrice}</p>
+        <p className={styles.initial}>$ {bookData.regPrice}</p>
         <p className={styles.location}>Online</p>
       </div>
       <div className={styles.perks}>
@@ -51,17 +50,10 @@ const ADT: React.FC<Props> = (props) => {
         </div>
       </div>
       <div className={styles.buttons}>
-        <button
-          onClick={() =>
-            cart.addItem(
-              { name: "Hello World", isbn: "123" },
-              "9ULTo0HInqi3DZYJdePf"
-            )
-          }
-        >
+        <button onClick={() => cart.addItem(bookData.isbn13)}>
           Add To Cart
         </button>
-        <Button>Add To Wishlist</Button>
+        <button>Add To Wishlist</button>
       </div>
     </div>
   );

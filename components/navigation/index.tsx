@@ -1,67 +1,93 @@
 import React, { useEffect, useState } from "react";
-import { useCart } from "../../hooks";
-import Button from "../button";
 import firebaseClient from "../../utils/firebaseClient";
 
 import styles from "./navigation.module.scss";
 import Link from "next/link";
+import { useAuth } from "../../hooks";
+import { BookDataProp } from "../../utils/interfaces";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCartPlus } from "@fortawesome/free-solid-svg-icons";
 
 interface Props {}
 
 const Navigation: React.FC<Props> = (props) => {
   const [cartPrice, setCartPrice] = useState(0);
-  const [languages, setLanguages] = useState<string[]>([]);
+  const [subjects, setSubjects] = useState<string[]>([]);
 
-  const calculateTotalPrice = (items) => {
+  const auth = useAuth();
+  const userId = auth.user ? auth.user.credentials.uid : null;
+
+  const calculateTotalPrice = (
+    items: {
+      quantity: number;
+      data: BookDataProp;
+    }[]
+  ) => {
     setCartPrice(0);
     items.forEach((item) => {
-      const itemPrice = item.quantity * item.data.price;
+      const itemPrice = item.quantity * item.data.salePrice;
       setCartPrice((prevState) => prevState + itemPrice);
     });
   };
 
-  const getLanguages = async () => {
-    const res = await fetch("http://127.0.0.1:5000/languages", {
-      mode: "cors",
-    });
-    console.log(res);
+  const getSubjects = async () => {
+    const res = await fetch("/api/subjects");
 
     const jsonData = await res.json();
-    setLanguages(jsonData.languages);
+    setSubjects(jsonData.data);
   };
 
   useEffect(() => {
-    const unsub = firebaseClient
-      .firestore()
-      .collection("shoppingCart")
-      .doc("9ULTo0HInqi3DZYJdePf")
-      .collection("items")
-      .onSnapshot((itemsSnap) => {
-        const itemList = itemsSnap.docs.map((item) => item.data());
-        calculateTotalPrice(itemList);
-      });
+    if (userId) {
+      const unsub = firebaseClient
+        .firestore()
+        .collection("shoppingCarts")
+        .doc(userId)
+        .collection("items")
+        .onSnapshot(async (itemsSnap) => {
+          let itemsData = [];
+          for (const item of itemsSnap.docs) {
+            const itemData = item.data() as {
+              quantity: number;
+              ref: firebaseClient.firestore.DocumentReference;
+            };
+            const prodData = (
+              await firebaseClient.firestore().doc(itemData.ref.path).get()
+            ).data();
+            itemsData.push({
+              quantity: itemData.quantity,
+              data: prodData,
+            });
+          }
+          calculateTotalPrice(itemsData);
+        });
 
-    return () => unsub();
+      return () => unsub();
+    }
   }, []);
 
   useEffect(() => {
-    getLanguages();
+    getSubjects();
   }, []);
 
   return (
     <div className={styles.container}>
       <div className={styles.nav}>
-        {languages.map((language) => (
-          <Link href={`/${language.toLocaleLowerCase()}`} passHref key={language}>
-            <a className={styles.link}>{language}</a>
+        {subjects.slice(0, 5).map((subject) => (
+          <Link href={`/subject/${subject}`} key={subject} passHref>
+            <a className={styles.link}>{subject}</a>
           </Link>
         ))}
       </div>
       <div className={styles.cart}>
-        <Button>
-          <div>$ {cartPrice}</div>
-          <div>Cart</div>
-        </Button>
+        <Link href="/cart">
+          <button>
+            <div>$ {cartPrice.toFixed(2)}</div>
+            <div>
+              <FontAwesomeIcon icon={faCartPlus} fixedWidth />
+            </div>
+          </button>
+        </Link>
       </div>
     </div>
   );

@@ -1,0 +1,10 @@
+.container {
+  display: grid;
+  justify-content: space-between;
+  grid-template-columns: repeat(5, 12vw);
+  row-gap: 50px;
+
+  @media screen and (max-width: 600px) {
+    grid-template-columns: 100%;
+  }
+}

@@ -1,33 +1,50 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import firebaseClient from "../utils/firebaseClient";
-import { ItemDataProp } from "../utils/interfaces";
+import { CartItemProp } from "../utils/interfaces";
+import useAuth from "./useAuth";
 
-const useCart = () => {
+const useCart = (cartId: string) => {
   const [error, setError] = useState<string | null>(null);
 
-  const getItems = async (cartId: string) => {
+  const getItems = async () => {
     const cartItemsRef = firebaseClient
       .firestore()
-      .collection("shoppingCart")
+      .collection("shoppingCarts")
       .doc(cartId)
       .collection("items");
 
     try {
+      let items = [];
       const cartSnap = await cartItemsRef.get();
-      return cartSnap.docs.map((item) => item.data());
+      for (const itemSnap of cartSnap.docs) {
+        const itemData = itemSnap.data() as CartItemProp;
+        console.log(itemData.ref.id);
+        const prodData = (
+          await firebaseClient
+            .firestore()
+            .collection("products")
+            .doc(itemData.ref.id)
+            .get()
+        ).data();
+        items.push({
+          quantity: itemData.quantity,
+          data: prodData,
+        });
+      }
+      return items;
     } catch (error) {
       return error;
     }
   };
 
-  const addItem = async (itemData: ItemDataProp, cartId: string) => {
+  const addItem = async (itemId: string) => {
     const cartItemsRef = firebaseClient
       .firestore()
-      .collection("shoppingCart")
+      .collection("shoppingCarts")
       .doc(cartId)
       .collection("items");
 
-    const itemSnap = await cartItemsRef.doc(itemData.isbn).get();
+    const itemSnap = await cartItemsRef.doc(itemId).get();
     if (itemSnap.exists) {
       itemSnap.ref.update({
         quantity: firebaseClient.firestore.FieldValue.increment(1),
@@ -35,15 +52,15 @@ const useCart = () => {
     } else {
       itemSnap.ref.set({
         quantity: 1,
-        data: itemData,
+        ref: firebaseClient.firestore().collection("products").doc(itemId),
       });
     }
   };
 
-  const removeItem = async (itemId: string, cartId: string) => {
+  const removeItem = async (itemId: string) => {
     const cartItemsRef = firebaseClient
       .firestore()
-      .collection("shoppingCart")
+      .collection("shoppingCarts")
       .doc(cartId)
       .collection("items");
     try {
@@ -54,14 +71,10 @@ const useCart = () => {
     }
   };
 
-  const changeItemQuantity = async (
-    itemId: string,
-    itemQuantity: number,
-    cartId: string
-  ) => {
+  const changeItemQuantity = async (itemId: string, itemQuantity: number) => {
     const cartItemRef = firebaseClient
       .firestore()
-      .collection("shoppingCart")
+      .collection("shoppingCarts")
       .doc(cartId)
       .collection("items")
       .doc(itemId);
@@ -75,7 +88,31 @@ const useCart = () => {
     }
   };
 
-  return { addItem, removeItem, changeItemQuantity, getItems, error };
+  const clearCart = async () => {
+    try {
+      const itemsQuery = await firebaseClient
+        .firestore()
+        .collection("shoppingCarts")
+        .doc(cartId)
+        .collection("items")
+        .get();
+      for (const item of itemsQuery.docs) {
+        await item.ref.delete();
+      }
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  return {
+    addItem,
+    removeItem,
+    clearCart,
+    changeItemQuantity,
+    getItems,
+    error,
+  };
 };
 
 export default useCart;

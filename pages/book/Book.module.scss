@@ -1,8 +1,13 @@
-.main {
+@import '../../styles/variables.scss';
+
+.container {
   display: flex;
   justify-content: space-between;
   border-bottom: 2px solid rgba(128, 128, 128, 0.5);
   padding-bottom: 3vh;
+  @media screen and (max-width: $screen-md) {
+    flex-direction: column;
+  }
 }
 
 .cover {

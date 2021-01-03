@@ -1,19 +1,91 @@
 import { GetServerSideProps } from "next";
-import React from "react";
-import { Table } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Form, Table } from "react-bootstrap";
 import { Layout } from "../../components";
 import firebaseAdmin from "../../utils/firebaseAdmin";
+import firebaseClient from "../../utils/firebaseClient";
+import { BookDataProp } from "../../utils/interfaces";
+import nookies from "nookies";
 
 import styles from "./Cart.module.scss";
+import Link from "next/link";
 
 interface Props {
-  cartItems: string;
+  cartItems: { data: BookDataProp; quantity: number }[];
+  uid: string;
 }
 
 const Cart: React.FC<Props> = (props) => {
-  const { cartItems } = props;
+  const { cartItems, uid } = props;
+  console.log(props);
+  const [total, setTotal] = useState(0);
+  const [currentCartItems, setCurrentCartItems] = useState(cartItems);
 
-  const cartItemss = JSON.parse(cartItems);
+  useEffect(() => {
+    setTotal(0);
+    cartItems.forEach((item) =>
+      setTotal((prevState) => prevState + item.quantity * item.data.salePrice)
+    );
+  }, [currentCartItems]);
+
+  const changeItemQuantity = async (itemId: string, quantity: number) => {
+    const res = await fetch("/api/cart/items", {
+      method: "PATCH",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: uid,
+        itemId,
+        quantity,
+      }),
+    });
+    console.log(await res.json());
+  };
+
+  const deleteItem = async (itemId: string) => {
+    const res = await fetch("/api/cart/items", {
+      method: "DELETE",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: uid,
+        itemId,
+      }),
+    });
+    console.log(await res.json());
+  };
+
+  // Real Time Updates
+  useEffect(() => {
+    const unsub = firebaseClient
+      .firestore()
+      .collection("shoppingCarts")
+      .doc(uid)
+      .collection("items")
+      .onSnapshot(async (itemsSnap) => {
+        let itemsData = [];
+        for (const item of itemsSnap.docs) {
+          const itemData = item.data() as {
+            quantity: number;
+            ref: firebaseClient.firestore.DocumentReference;
+          };
+          const prodData = (
+            await firebaseClient.firestore().doc(itemData.ref.path).get()
+          ).data();
+          itemsData.push({
+            quantity: itemData.quantity,
+            data: prodData,
+          });
+        }
+        setCurrentCartItems(itemsData);
+      });
+    return () => unsub();
+  }, []);
+
   return (
     <Layout small>
       <div className={styles.container}>
@@ -27,38 +99,106 @@ const Cart: React.FC<Props> = (props) => {
             </tr>
           </thead>
           <tbody>
-            {cartItemss.map((item) => (
-              <tr key={item.data.isbn}>
+            {currentCartItems.map((item) => (
+              <tr className={styles.item} key={item.data.isbn13}>
                 <td>
-                  <img src="https://covers2.booksamillion.com/covers/bam/0/06/297/658/0062976583_b.jpg" alt="book name" width={50} height={50} />
-                  {item.data.name}</td>
-                <td>${item.data.price}</td>
-                <td>{item.quantity}</td>
+                  <img
+                    src={`http://images.amazon.com/images/P/${item.data.isbn10}.jpg`}
+                    alt="book name"
+                    width={50}
+                    height={50}
+                  />
+                  {item.data.title}
+                </td>
+                <td>${item.data.salePrice}</td>
                 <td>
-                  <button style={{width: '50px'}}>X</button>
+                  <Form>
+                    <Form.Group>
+                      <Form.Control
+                        as="select"
+                        value={item.quantity}
+                        onChange={(e) =>
+                          changeItemQuantity(
+                            item.data.isbn13,
+                            Number(e.target.value)
+                          )
+                        }
+                      >
+                        {[1, 2, 3, 4, 5].map((index) => (
+                          <option key={index}>{index}</option>
+                        ))}
+                      </Form.Control>
+                    </Form.Group>
+                  </Form>
+                </td>
+                <td>
+                  <button
+                    onClick={() => deleteItem(item.data.isbn13)}
+                    style={{ width: "50px" }}
+                  >
+                    X
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </Table>
+        <div className={styles.cartFooter}>
+          <div>
+            <Link href="/checkout">
+              <button disabled={currentCartItems.length === 0}>
+                Check Out
+              </button>
+            </Link>
+          </div>
+          <div className={styles.total}>
+            Total:
+            <span> ${total.toFixed(2)}</span>
+          </div>
+        </div>
       </div>
     </Layout>
   );
 };
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const itemsSnap = await firebaseAdmin
-    .firestore()
-    .collection("shoppingCart")
-    .doc("9ULTo0HInqi3DZYJdePf")
-    .collection("items")
-    .get();
+  try {
+    const cookies = nookies.get(ctx);
+    const token = await firebaseAdmin.auth().verifyIdToken(cookies.token);
+    var { uid } = token;
 
-  return {
-    props: {
-      cartItems: JSON.stringify(itemsSnap.docs.map((item) => item.data())),
-    },
-  };
+    const itemsSnap = await firebaseAdmin
+      .firestore()
+      .collection("shoppingCarts")
+      .doc(uid)
+      .collection("items")
+      .get();
+
+    let itemsData = [];
+    for (const item of itemsSnap.docs) {
+      const itemData = item.data() as {
+        quantity: number;
+        ref: firebaseAdmin.firestore.DocumentReference;
+      };
+      const prodData = (await itemData.ref.get()).data();
+      itemsData.push({
+        quantity: itemData.quantity,
+        data: prodData,
+      });
+    }
+    return {
+      props: {
+        cartItems: itemsData,
+        uid,
+      },
+    };
+  } catch (error) {
+    return {
+      props: {
+        cartItems: { status: false, data: error.message },
+      },
+    };
+  }
 };
 
 export default Cart;

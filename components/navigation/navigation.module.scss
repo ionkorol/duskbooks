@@ -1,8 +1,13 @@
+@import "../../styles/variables.scss";
+
 .container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   box-shadow: 0px 10px 4px 0px rgba(188, 211, 236, 1);
+  @media screen and (max-width: $screen-md) {
+    display: none;
+  }
 }
 
 .nav {
@@ -12,10 +17,7 @@
 
 .link {
   display: flex;
-  padding-top: 2vh;
-  padding-bottom: 2vh;
-  padding-right: 2vw;
-  padding-left: 2vw;
+  padding: 2vh 2vw;
   font-weight: bold;
 }
 

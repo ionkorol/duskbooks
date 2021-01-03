@@ -16,7 +16,7 @@ const Home = (props) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className={styles.section}>
+      {/* <div className={styles.section}>
         <BookShelf />
       </div>
       <div className={styles.section}>
@@ -24,7 +24,7 @@ const Home = (props) => {
       </div>
       <div className={styles.section}>
         <BookShelf />
-      </div>
+      </div> */}
     </Layout>
   );
 };
@@ -34,8 +34,6 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     const cookies = nookies.get(ctx);
     const token = await firebaseAdmin.auth().verifyIdToken(cookies.token);
-
-    // the user is authenticated!
     const { uid, email } = token;
 
     // FETCH STUFF HERE!! 🚀

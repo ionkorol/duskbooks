@@ -53,10 +53,13 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     // the user is authenticated!
     const { uid, email } = token;
 
-    // FETCH STUFF HERE!! 🚀
-    ctx.res.writeHead(302, { Location: "/" });
-    ctx.res.end();
+    if (email) {
+      // FETCH STUFF HERE!! 🚀
+      ctx.res.writeHead(302, { Location: "/" });
+      ctx.res.end();
 
+      return { props: {} as never };
+    }
     return { props: {} as never };
   } catch (error) {
     return {
