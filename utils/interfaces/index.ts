@@ -31,9 +31,10 @@ export interface BookDataProp {
 export interface OrderProp {
   id: number;
   lineItems: { quantity: number; data: BookDataProp }[];
+  shippingPrice: number;
   totalPrice: number;
   userId: string;
-  createdAt: firebaseClient.firestore.Timestamp;
+  createdAt: { _seconds: number; _nanoseconds: number };
   fulfillmentStatus: "Processing" | "Shipped" | "Completed" | "Canceled";
   shippingAddress: AddressProp;
   billingAddress: AddressProp;

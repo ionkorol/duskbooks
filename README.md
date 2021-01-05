@@ -14,13 +14,14 @@
 
 ### CheckOut Page
 
-- [ ] Create Thank You Page after order placed.
+- [x] Create Thank You Page after order placed.
 - [x] Complete Information to Paypal
   - [x] Send Order #
 - [x] Same as Billing Address Functionality
 - [x] Form validation and Functionality
 - [x] Lazy Load Paypal Script
 - [x] Assign Login Only Page
+- [ ] Fix DB order info
 
 ### Cart Page
 
