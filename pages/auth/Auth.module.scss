@@ -1,0 +1,16 @@
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 50px;
+
+  div {
+    form {
+      outline: 1px solid rgba(128, 128, 128, 0.3);
+      padding: 50px;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
+}

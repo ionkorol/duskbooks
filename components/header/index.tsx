@@ -50,10 +50,7 @@ const TopMenu = (props) => {
             <a>My Account</a>
           </Link>
         ) : (
-          <>
-            <Link href="/auth/signin">SIGN IN</Link>
-            <Link href="/auth/signup">SIGN UP</Link>
-          </>
+          <Link href="/auth">SIGN IN or SIGN UP</Link>
         )}
         <Link href="/about">About Us</Link>
         <Link href="/contact">Contact Us</Link>

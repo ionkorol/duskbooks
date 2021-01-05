@@ -5,7 +5,7 @@
   grid-template-columns: 20% 70%;
   column-gap: 10%;
 
-  @media screen and (max-width: $screen-md) {
+  @media screen and (max-width: $screen-s) {
     grid-template-columns: 100%;
   }
 }

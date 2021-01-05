@@ -41,7 +41,7 @@ const useCart = (cartId: string) => {
 
   const addItem = async (itemId: string) => {
     if (!cartId) {
-      router.push("/auth/signin");
+      router.push("/auth");
     }
     try {
       const cartItemsRef = firebaseClient
