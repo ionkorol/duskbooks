@@ -16,7 +16,7 @@
     width: 30%;
   }
 
-  @media screen and (max-width: $screen-md) {
+  @media screen and (max-width: $screen-s) {
     flex-direction: column;
     .rightContainer,
     .leftContainer {
