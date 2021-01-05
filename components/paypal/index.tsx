@@ -29,18 +29,27 @@ const Paypal: React.FC<Props> = (props) => {
 
   const paypal = useRef(null);
 
+  console.log(process.env.PAYPAL_API_KEY)
   useEffect(() => {
-    onRun(shippingAddress, billingAddress, itemsData, userData, onPaid, paypal);
-  }, []);
-
-  useCompRender(() => {
     const script = document.createElement("script");
-    script.async = true;
+    script.type = "text/javascript";
     script.src =
-      "https://www.paypal.com/sdk/js?client-id=AVazpM2HJg_XaoHT7TILEidPA_oPWiMxraxt8tufbxCGVu5JlK1S31zZxez1g5AzeXF6PBPKC17lNcVy";
+      `https://www.paypal.com/sdk/js?client-id=${process.env.NEXT_PUBLIC_PAYPAL_API_KEY}`;
     //For head
     document.head.appendChild(script);
-  });
+    script.onload = () => {
+      onRun(
+        shippingAddress,
+        billingAddress,
+        itemsData,
+        userData,
+        onPaid,
+        paypal
+      );
+    };
+  }, []);
+
+  useCompRender(() => {});
 
   return (
     <div>
