@@ -18,6 +18,7 @@ interface Props {
 
 const Book: React.FC<Props> = (props) => {
   const { bookData, userData, uid, error } = props;
+  console.log(bookData)
 
   return (
     <Layout small>
@@ -83,7 +84,7 @@ const Book: React.FC<Props> = (props) => {
         </div>
       </div>
       <div className={styles.related}>
-        <BookShelf subject="Fiction" />
+        {/* <BookShelf subject="Fiction" /> */}
       </div>
     </Layout>
   );
