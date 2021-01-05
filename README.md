@@ -4,8 +4,15 @@
 
 - [ ] Search Bar Functionality
 - [x] Implement persistance for users and guests
+- [ ] Different screen size adjustments
 
-## Check Out Page - Curent
+## Pages
+
+### Account Page
+
+- [x] Assign Login Only Pages
+
+### CheckOut Page
 
 - [ ] Create Thank You Page after order placed.
 - [x] Complete Information to Paypal
@@ -13,33 +20,32 @@
 - [x] Same as Billing Address Functionality
 - [x] Form validation and Functionality
 - [x] Lazy Load Paypal Script
+- [x] Assign Login Only Page
 
-- [ ] Assign Login Only Pages
-  - [ ] Account
-  - [ ] Checkout
+### Cart Page
 
-## Cart Page
-
-- [ ] Prevent Checkout Access on empty carts
+- [x] Prevent non user Access
 - [ ] Set and Use Cart Errors
 - [x] Delete Functionality
 - [x] Quantity Change Functionality
 - [x] Real Time Updates
 
-## Home Page
+### Home Page
 
 - [ ] Book Shelves
 
-## Subject Page
+### Subject Page
 
 - [ ] Link Error
 
-## Book Page
+### Book Page
 
 - [ ] Whishlist Functionality
 - [ ] Description Height and Read More
 
-## Navigation Component
+## Components
+
+### Navigation
 
 - [ ] On hover cart functionality
 - [ ] Successful add notification

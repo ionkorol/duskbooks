@@ -1,16 +1,8 @@
 @import "../../styles/variables.scss";
 
-.title {
-  display: flex;
-  justify-content: center;
-  margin: 5vh 0;
-  font-weight: bold;
-  font-size: 2rem;
-}
-
 .container {
   display: flex;
-  margin: 0 10vw;
+  padding-bottom: 20px;
   .formContainer,
   .infoContainer {
     padding: 0 20px;
@@ -28,10 +20,20 @@
   }
 }
 
+.title {
+  display: flex;
+  justify-content: center;
+  margin: 5vh 0;
+  font-weight: bold;
+  font-size: 2rem;
+}
+
 .infoContainer {
   display: flex;
   flex-direction: column;
   .message {
+    text-align: center;
+    font-weight: bold;
     font-size: 1.5rem;
     justify-content: center;
     margin-bottom: 40px;
@@ -56,24 +58,6 @@
   }
 }
 
-.formRow {
-  display: flex;
-  width: inherit;
-  flex-wrap: wrap;
-  margin: 0 -15px;
-}
-
-.inputGroup {
-  display: flex;
-  flex-direction: column;
+.sendForm {
   width: 100%;
-  padding: 0 15px;
-  margin-bottom: 1rem;
-  input {
-    padding: 0.375rem 0.75rem;
-  }
-  select {
-    height: 100%;
-    padding: 0.375rem 1.75rem 0.375rem 0.75rem;
-  }
 }

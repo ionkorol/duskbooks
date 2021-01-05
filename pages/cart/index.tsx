@@ -17,13 +17,14 @@ interface Props {
 
 const Cart: React.FC<Props> = (props) => {
   const { cartItems, uid } = props;
-  console.log(props);
   const [total, setTotal] = useState(0);
   const [currentCartItems, setCurrentCartItems] = useState(cartItems);
 
+  const calculateTotal = () => {};
+
   useEffect(() => {
     setTotal(0);
-    cartItems.forEach((item) =>
+    currentCartItems.forEach((item) =>
       setTotal((prevState) => prevState + item.quantity * item.data.salePrice)
     );
   }, [currentCartItems]);
@@ -164,8 +165,16 @@ const Cart: React.FC<Props> = (props) => {
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
     const cookies = nookies.get(ctx);
-    const token = await firebaseAdmin.auth().verifyIdToken(cookies.token);
-    var { uid } = token;
+    var uid = null;
+    var userData = null;
+    if (cookies.token) {
+      const token = await firebaseAdmin.auth().verifyIdToken(cookies.token);
+      uid = token.uid;
+    } else {
+      ctx.res.writeHead(302, { Location: "/auth/signin" });
+      ctx.res.end();
+      return { props: {} as never };
+    }
 
     const itemsSnap = await firebaseAdmin
       .firestore()

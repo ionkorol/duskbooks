@@ -42,7 +42,12 @@ const Book: React.FC<Props> = (props) => {
       <p className={styles.price}>
         $ {loading ? "loading price" : bookData.salePrice}
       </p>
-      <button onClick={() => cart.addItem(bookData.isbn13)}>Add To Cart</button>
+      <button
+        className={styles.adt}
+        onClick={() => cart.addItem(bookData.isbn13)}
+      >
+        Add To Cart
+      </button>
     </div>
   );
 };

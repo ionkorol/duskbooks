@@ -14,6 +14,7 @@ const Layout: React.FC<Props> = (props) => {
       <Header small={small} />
       <Navigation />
       <div className={styles.mainContainer}>{props.children}</div>
+      <div className={styles.footer}>Copyright @ duskbooks.com</div>
     </div>
   );
 };
