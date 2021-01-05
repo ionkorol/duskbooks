@@ -7,14 +7,11 @@ import firebaseAdmin from "../../utils/firebaseAdmin";
 import {
   BookDataProp,
   FirebaseUserProp,
-  OrderInProp,
 } from "../../utils/interfaces";
 import styles from "./Checkout.module.scss";
-import firebaseClient from "../../utils/firebaseClient";
 import nookies from "nookies";
 import { AddressForm, MiniCart } from "../../components/checkout";
-import { Form } from "react-bootstrap";
-import { CreateOrderObj } from "../../components/paypal/interfaces";
+import { Alert, Form } from "react-bootstrap";
 
 interface Props {
   itemsData: { quantity: number; data: BookDataProp }[];
@@ -72,6 +69,7 @@ const Checkout: React.FC<Props> = (props) => {
   const [page, setPage] = useState<"shipping" | "billing" | "payment">(
     "shipping"
   );
+  const [error, setError] = useState(null);
 
   const cart = useCart(uid);
   const router = useRouter();
@@ -80,50 +78,32 @@ const Checkout: React.FC<Props> = (props) => {
   const billingForm = useRef(null);
 
   const onPaid = async () => {
-    // Calculate Total Price
-    let totalPrice = 0;
-    itemsData.forEach(
-      (item) => (totalPrice += item.quantity * item.data.salePrice)
-    );
-
     try {
-      // Get Last Order Id
-      const lastOrderQuery = await firebaseClient
-        .firestore()
-        .collection("orders")
-        .orderBy("id", "desc")
-        .limit(1)
-        .get();
-      const lastOrderId = lastOrderQuery.docs[0].data().id;
-
-      // Add Order Details to the DB
-      await firebaseClient
-        .firestore()
-        .collection("orders")
-        .doc(String(lastOrderId + 1))
-        .set({
-          id: lastOrderId + 1,
-          lineItems: [
-            ...itemsData.map((item) => ({
-              quantity: item.quantity,
-              data: item.data,
-            })),
-          ],
-          totalPrice: totalPrice,
-          userId: "Pdxel9Q7uMXY1q2R6WmkS3aBkhB3",
-          createdAt: firebaseClient.firestore.FieldValue.serverTimestamp(),
-          fulfillmentStatus: "Processing",
-          shippingAddress: shippingAddress,
-          billingAddress: billingAddress,
+      const res = await fetch("/api/orders", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          lineItems: itemsData,
+          userId: uid,
           paymentMethod: paymentType,
-        } as OrderInProp);
+          shippingAddress,
+          billingAddress,
+        }),
+      });
+
+      const orderId = (await res.json()).data.id;
 
       // Clear Cart
       cart.clearCart();
-      // Redirect to Account
-      router.push("/account");
+
+      // Redirect to Order
+      router.push(`/account/orders/${orderId}`);
     } catch (error) {
       console.log(error);
+      setError(error);
     }
   };
 
@@ -148,9 +128,9 @@ const Checkout: React.FC<Props> = (props) => {
 
   return (
     <Layout small>
-      <script src="https://www.paypal.com/sdk/js?client-id=AVazpM2HJg_XaoHT7TILEidPA_oPWiMxraxt8tufbxCGVu5JlK1S31zZxez1g5AzeXF6PBPKC17lNcVy" />
       <div className={styles.container}>
         <div className={styles.leftContainer}>
+          <Alert variant="dangerous">{error}</Alert>
           {page === "shipping" ? (
             <AddressForm
               title="Shipping Information"

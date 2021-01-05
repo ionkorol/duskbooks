@@ -9,6 +9,7 @@ import styles from "./Orders.module.scss";
 import { AccountLayout } from "../../../components/account";
 import { GetServerSideProps } from "next";
 import firebaseAdmin from "../../../utils/firebaseAdmin";
+import Link from "next/link";
 
 interface Props {
   userData: UserWithOrdersProp;
@@ -20,7 +21,7 @@ const AccountOrders: React.FC<Props> = (props) => {
   return (
     <AccountLayout userData={userData}>
       <div className={styles.ordersContainer}>
-        <Table striped>
+        <Table striped hover>
           <thead>
             <tr>
               <th>Order</th>
@@ -32,13 +33,15 @@ const AccountOrders: React.FC<Props> = (props) => {
           </thead>
           <tbody>
             {userData.orders.map((order) => (
-              <tr className={styles.order} key={order.id}>
-                <td># {order.id}</td>
-                <td>{order.createdAt}</td>
-                <td>{order.lineItems.length}</td>
-                <td>{order.totalPrice}</td>
-                <td>{order.fulfillmentStatus}</td>
-              </tr>
+              <Link href={`/account/orders/${order.id}`}>
+                <tr className={styles.order} key={order.id}>
+                  <td># {order.id}</td>
+                  <td>{order.createdAt}</td>
+                  <td>{order.lineItems.length}</td>
+                  <td>{order.totalPrice}</td>
+                  <td>{order.fulfillmentStatus}</td>
+                </tr>
+              </Link>
             ))}
           </tbody>
         </Table>

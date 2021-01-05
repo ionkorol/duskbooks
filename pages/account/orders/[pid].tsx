@@ -44,10 +44,10 @@ const Order: React.FC<Props> = (props) => {
             {orderData.lineItems.map((item) => (
               <tr className={styles.product} key={item.data.isbn13}>
                 <td>{item.data.title}</td>
-                <td>{item.data.salePrice}</td>
+                <td>${item.data.salePrice}</td>
                 <td>{item.quantity}</td>
                 <td className={styles.total}>
-                  {(item.quantity * item.data.salePrice).toFixed(2)}
+                  ${(item.quantity * item.data.salePrice).toFixed(2)}
                 </td>
               </tr>
             ))}
@@ -55,7 +55,7 @@ const Order: React.FC<Props> = (props) => {
         </Table>
         <div className={styles.line}>
           <span>Subtotal</span>
-          <span>${orderData.totalPrice}</span>
+          <span>${orderData.itemsTotalPrice}</span>
         </div>
         <div className={styles.line}>
           <span>Shipping</span>
@@ -63,9 +63,7 @@ const Order: React.FC<Props> = (props) => {
         </div>
         <div className={styles.line}>
           <span>Total</span>
-          <span>
-            ${(orderData.totalPrice + orderData.shippingPrice).toFixed(2)}
-          </span>
+          <span>${orderData.totalPrice}</span>
         </div>
       </div>
     </AccountLayout>

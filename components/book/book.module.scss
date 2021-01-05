@@ -3,11 +3,11 @@
 .contaier {
   display: flex;
   flex-direction: column;
+  margin-bottom: 50px;
 }
 
 .cover {
   width: auto;
-  height: 250px;
   margin-bottom: 10px;
   box-shadow: -5px 5px 4px 0px rgba(0, 0, 0, 0.5);
 }

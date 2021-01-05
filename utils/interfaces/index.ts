@@ -39,6 +39,7 @@ export interface OrderProp {
   shippingAddress: AddressProp;
   billingAddress: AddressProp;
   paymentMethod: "Paypal" | "Card";
+  itemsTotalPrice: number;
 }
 
 export interface OrderInProp {
@@ -51,6 +52,8 @@ export interface OrderInProp {
   shippingAddress: AddressProp;
   billingAddress: AddressProp;
   paymentMethod: "Paypal" | "Card";
+  shippingPrice: number;
+  itemsTotalPrice: number;
 }
 
 export interface UserWithOrdersProp {

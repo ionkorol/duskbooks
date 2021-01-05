@@ -19,7 +19,7 @@ const Header: React.FC<Props> = (props) => {
 
       {small ? null : (
         <div className={styles.bestSellers}>
-          <BookShelf />
+          <BookShelf subject={"Fiction"} />
         </div>
       )}
     </div>

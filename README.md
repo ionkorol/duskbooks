@@ -21,7 +21,7 @@
 - [x] Form validation and Functionality
 - [x] Lazy Load Paypal Script
 - [x] Assign Login Only Page
-- [ ] Fix DB order info
+- [x] Fix DB order info
 
 ### Cart Page
 
@@ -50,3 +50,7 @@
 
 - [ ] On hover cart functionality
 - [ ] Successful add notification
+
+### Bookshelf
+
+- [ ] See All Functionality

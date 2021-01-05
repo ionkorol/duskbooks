@@ -11,20 +11,17 @@ const Home = (props) => {
 
   return (
     <Layout>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      {/* <div className={styles.section}>
-        <BookShelf />
+      <div className={styles.container}>
+        <div className={styles.section}>
+          <BookShelf subject={"Young Adult Nonfiction"} />
+        </div>
+        <div className={styles.section}>
+          <BookShelf subject={"True Crime"} />
+        </div>
+        <div className={styles.section}>
+          <BookShelf subject={"Health & Fitness"} />
+        </div>
       </div>
-      <div className={styles.section}>
-        <BookShelf />
-      </div>
-      <div className={styles.section}>
-        <BookShelf />
-      </div> */}
     </Layout>
   );
 };

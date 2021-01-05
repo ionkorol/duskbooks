@@ -3,14 +3,18 @@ import { Book } from "..";
 
 import styles from "./bookShelf.module.scss";
 
-interface Props {}
+interface Props {
+  subject: string;
+}
 
 const BookShelf: React.FC<Props> = (props) => {
+  const { subject } = props;
+
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const getBooks = async () => {
-    const res = await fetch("/api/subject/Fiction");
+    const res = await fetch(`/api/subject/${subject}`);
 
     const bookJson = await res.json();
 
@@ -25,7 +29,7 @@ const BookShelf: React.FC<Props> = (props) => {
   return (
     <div className={styles.container}>
       <div className={styles.controls}>
-        <p className={styles.title}>BEST SELLERS</p>
+        <p className={styles.title}>{subject}</p>
         <p>
           <a href="#">SEE ALL &gt;</a>
         </p>

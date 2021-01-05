@@ -83,7 +83,7 @@ const Book: React.FC<Props> = (props) => {
         </div>
       </div>
       <div className={styles.related}>
-        <BookShelf />
+        <BookShelf subject="Fiction" />
       </div>
     </Layout>
   );
