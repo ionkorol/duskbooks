@@ -24,28 +24,32 @@ export default function AuthProvider({ children }: any) {
   const [error, setError] = useState<string | null>(null);
 
   const router = useRouter();
-  const getUser = (user: firebaseClient.User) => {
-    if (user.isAnonymous) {
-      setUser({
-        data: null,
-        credentials: user,
+  const getUser = async (user: firebaseClient.User) => {
+    // Create The Shopping Cart
+    const shoppingCartSnap = await firebaseClient
+      .firestore()
+      .collection("shoppingCarts")
+      .doc(user.uid)
+      .get();
+    if (!shoppingCartSnap.exists) {
+      await shoppingCartSnap.ref.set({
+        id: user.uid,
       });
-    } else {
-      firebaseClient
-        .firestore()
-        .collection("users")
-        .doc(user.uid)
-        .get()
-        .then((userSnap) =>
-          setUser({
-            data: userSnap.data() as FirebaseUserProp,
-            credentials: user,
-          })
-        )
-        .catch((error) => {
-          setError(error.message);
-        });
     }
+    firebaseClient
+      .firestore()
+      .collection("users")
+      .doc(user.uid)
+      .get()
+      .then((userSnap) =>
+        setUser({
+          data: userSnap.data() as FirebaseUserProp,
+          credentials: user,
+        })
+      )
+      .catch((error) => {
+        setError(error.message);
+      });
   };
 
   const signIn = (email: string, password: string) => {
@@ -78,14 +82,17 @@ export default function AuthProvider({ children }: any) {
       .catch((error) => setError(error.message));
   };
 
+  const changePassword = () => {
+    firebaseClient.auth();
+  };
+
   // listen for token changes
   // call setUser and write new token as a cookie
   useEffect(() => {
     return firebaseClient.auth().onIdTokenChanged(async (user) => {
       if (!user) {
-        const user = await firebaseClient.auth().signInAnonymously();
-        getUser(user.user);
-        Cookies.set("token", user.user.getIdToken());
+        setUser(null);
+        Cookies.remove("token");
       } else {
         const token = await user.getIdToken();
         getUser(user);

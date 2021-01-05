@@ -1,187 +1,213 @@
 import { GetServerSideProps } from "next";
 import React, { useState } from "react";
-import { Table } from "react-bootstrap";
-import { Layout } from "../../components";
-import { useAuth } from "../../hooks";
+import { Form } from "react-bootstrap";
+import { useCompUpdate } from "../../hooks";
 import firebaseAdmin from "../../utils/firebaseAdmin";
-import { OrderProp, UserWithOrdersProp } from "../../utils/interfaces";
+import { UserWithOrdersProp } from "../../utils/interfaces";
 import nookies from "nookies";
 import styles from "./Account.module.scss";
+import { AccountLayout } from "../../components/account";
 
 interface Props {
   userData: UserWithOrdersProp;
 }
 
-const Account: React.FC<Props> = (props) => {
-  const { userData } = props;
-  const [selected, setSelected] = useState<"General" | "Orders">("General");
-  const auth = useAuth();
-  return (
-    <Layout small>
-      <h4 className={styles.title}>Account</h4>
-      <div className={styles.container}>
-        <div className={styles.sidebar}>
-          <div className={styles.profile}>
-            {userData.firstName} {userData.lastName}
-          </div>
-          <div className={styles.menu}>
-            <div
-              onClick={() => setSelected("General")}
-              className={selected == "General" ? styles.active : null}
-            >
-              General
-            </div>
-            <div
-              onClick={() => setSelected("Orders")}
-              className={selected == "Orders" ? styles.active : null}
-            >
-              Orders
-            </div>
-            <div onClick={auth.signOut}>Log Out</div>
-          </div>
-        </div>
-        <div className={styles.main}>
-          {selected == "General" ? (
-            <General userData={userData} />
-          ) : (
-            <Orders orders={userData.orders} />
-          )}
-        </div>
-      </div>
-    </Layout>
-  );
-};
-
-export default Account;
-
-interface GeneralProps {
-  userData: UserWithOrdersProp;
-}
-
-const General = (props) => {
+const AccountGeneral: React.FC<Props> = (props) => {
   const { userData } = props;
 
-  const [fName, setFName] = useState(userData.firstName);
-  const [lName, setLName] = useState(userData.lastName);
+  const [firstName, setFirstName] = useState(userData.firstName);
+  const [lastName, setLastName] = useState(userData.lastName);
   const [email, setEmail] = useState(userData.email);
   const [password, setPassword] = useState("");
   const [cPassword, setCPassword] = useState("");
 
-  const [fNameError, setFNameError] = useState("");
-  const [lNameError, setLNameError] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [cPasswordError, setCPasswordError] = useState("");
+  const [firstNameError, setFirstNameError] = useState(null);
+  const [lastNameError, setLastNameError] = useState(null);
+  const [emailError, setEmailError] = useState(null);
+  const [passwordError, setPasswordError] = useState(null);
+  const [cPasswordError, setCPasswordError] = useState(null);
+
+  const [formValidated, setFormValidated] = useState(true);
+
+  useCompUpdate(() => {
+    firstNameValidation();
+  }, [firstName]);
+  useCompUpdate(() => {
+    lastNameValidation();
+  }, [lastName]);
+  useCompUpdate(() => {
+    emailValidation();
+  }, [email]);
+  useCompUpdate(() => {
+    passwordValidation();
+  }, [password]);
+  useCompUpdate(() => {
+    cPasswordValidation();
+  }, [cPassword]);
+
+  const firstNameValidation = () => {
+    if (!firstName) {
+      setFirstNameError("First name has not been set!");
+      return false;
+    } else {
+      setFirstNameError(null);
+      return true;
+    }
+  };
+
+  const lastNameValidation = () => {
+    if (!lastName) {
+      setLastNameError("Last name has not been set!");
+      return false;
+    } else {
+      setLastNameError(null);
+      return true;
+    }
+  };
+
+  const emailValidation = () => {
+    if (!email) {
+      setEmailError("Email has not been set!");
+      return false;
+    } else {
+      setEmailError(null);
+      return true;
+    }
+  };
+
+  const passwordValidation = () => {
+    if (password) {
+      if (password.length < 6) {
+        setPasswordError("Password needs to be at least 6 characters long!");
+        return false;
+      } else if (!password.match("[0-9]")) {
+        setPasswordError("Password needs to has at least one number!");
+        return false;
+      } else {
+        setPasswordError(null);
+        return true;
+      }
+    } else {
+      setPasswordError(null);
+      return true;
+    }
+  };
+
+  const cPasswordValidation = () => {
+    if (password && password !== cPassword) {
+      setCPasswordError("Confirmation Password doesn't match!");
+      return false;
+    } else {
+      setCPasswordError(null);
+      return true;
+    }
+  };
+
+  const formValidation = () => {
+    var validated = true;
+    validated = firstNameValidation();
+    validated = lastNameValidation();
+    validated = emailValidation();
+    validated = passwordValidation();
+    validated = cPasswordValidation();
+
+    setFormValidated(validated);
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    formValidation();
+    if (formValidated) {
+      console.log("Test");
+    }
+  };
 
   return (
-    <form>
-      <h4>Personal Information</h4>
-      <hr />
-      <div className={styles.formRow}>
-        <div className={styles.inputGroup}>
-          <label>First Name</label>
-          <input
-            type="text"
-            value={fName}
-            onChange={(e) => setFName(e.target.value)}
-            required
-          />
-          <div className={styles.invalidInput}>{fNameError}</div>
-        </div>
+    <AccountLayout userData={userData}>
+      <div className={styles.container}>
+        <Form onSubmit={handleSubmit}>
+          <h4>Personal Information</h4>
+          <hr />
+          <Form.Group>
+            <Form.Label>First Name</Form.Label>
+            <Form.Control
+              type="text"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              isInvalid={!!firstNameError}
+              required
+            />
+            <Form.Control.Feedback type="invalid">
+              {firstNameError}
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Last Name</Form.Label>
+            <Form.Control
+              type="text"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              isInvalid={!!lastNameError}
+              required
+            />
+            <Form.Control.Feedback type="invalid">
+              {lastNameError}
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Email</Form.Label>
+            <Form.Control
+              type="text"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              isInvalid={!!emailError}
+              required
+            />
+            <Form.Control.Feedback type="invalid">
+              {emailError}
+            </Form.Control.Feedback>
+          </Form.Group>
+          {/* <h4>Personal Information</h4>
+          <hr />
+          <Form.Group>
+            <Form.Label>Password</Form.Label>
+            <Form.Control
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              isInvalid={!!passwordError}
+            />
+            <Form.Control.Feedback type="invalid">
+              {passwordError}
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Confirm Password</Form.Label>
+            <Form.Control
+              type="password"
+              value={cPassword}
+              onChange={(e) => setCPassword(e.target.value)}
+              isInvalid={!!cPasswordError}
+            />
+            <Form.Control.Feedback type="invalid">
+              {cPasswordError}
+            </Form.Control.Feedback>
+          </Form.Group> */}
+          <button
+            type="submit"
+            disabled={
+              firstNameError || lastNameError || emailError || passwordError
+            }
+          >
+            Save Changes
+          </button>
+        </Form>
       </div>
-      <div className={styles.formRow}>
-        <div className={styles.inputGroup}>
-          <label>Last Name</label>
-          <input
-            type="text"
-            value={lName}
-            onChange={(e) => setLName(e.target.value)}
-            required
-          />
-          <div className={styles.invalidInput}>{lNameError}</div>
-        </div>
-      </div>
-      <div className={styles.formRow}>
-        <div className={styles.inputGroup}>
-          <label>Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <div className={styles.invalidInput}>{emailError}</div>
-        </div>
-      </div>
-      <h4>Change Password</h4>
-      <hr />
-      <div className={styles.formRow}>
-        <div className={styles.inputGroup}>
-          <label>Password</label>
-          <input
-            type="text"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <div className={styles.invalidInput}>{passwordError}</div>
-        </div>
-      </div>
-      <div className={styles.formRow}>
-        <div className={styles.inputGroup}>
-          <label>Confirm Password</label>
-          <input
-            type="text"
-            value={cPassword}
-            onChange={(e) => setCPassword(e.target.value)}
-            required
-          />
-          <div className={styles.invalidInput}>{cPasswordError}</div>
-        </div>
-      </div>
-      <div className={styles.formRow}>
-        <div className={styles.inputGroup}>
-          <button type="submit">Send</button>
-        </div>
-      </div>
-    </form>
+    </AccountLayout>
   );
 };
 
-interface OrdersProps {
-  orders: OrderProp[];
-}
-
-const Orders: React.FC<OrdersProps> = (props) => {
-  const { orders } = props;
-  console.log(orders);
-  return (
-    <div className={styles.ordersContainer}>
-      <Table striped>
-        <thead>
-          <tr>
-            <th>Order</th>
-            <th>Date</th>
-            <th>Items</th>
-            <th>Total</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {orders.map((order) => (
-            <tr className={styles.order} key={order.id}>
-              <td># {order.id}</td>
-              <td>{order.createdAt}</td>
-              <td>{order.lineItems.length}</td>
-              <td>{order.totalPrice}</td>
-              <td>{order.fulfillmentStatus}</td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-    </div>
-  );
-};
+export default AccountGeneral;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {

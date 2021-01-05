@@ -29,3 +29,13 @@
   font-weight: bold;
   font-size: 1.5rem;
 }
+
+.backButton {
+  margin-bottom: 50px;
+  font-size: 1.2rem;
+
+  &:hover {
+    color: $secondary;
+    cursor: pointer;
+  }
+}

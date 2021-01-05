@@ -1,10 +1,12 @@
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import firebaseClient from "../utils/firebaseClient";
 import { CartItemProp } from "../utils/interfaces";
-import useAuth from "./useAuth";
 
 const useCart = (cartId: string) => {
   const [error, setError] = useState<string | null>(null);
+
+  const router = useRouter();
 
   const getItems = async () => {
     const cartItemsRef = firebaseClient
@@ -38,22 +40,29 @@ const useCart = (cartId: string) => {
   };
 
   const addItem = async (itemId: string) => {
-    const cartItemsRef = firebaseClient
-      .firestore()
-      .collection("shoppingCarts")
-      .doc(cartId)
-      .collection("items");
+    if (!cartId) {
+      router.push("/auth/signin");
+    }
+    try {
+      const cartItemsRef = firebaseClient
+        .firestore()
+        .collection("shoppingCarts")
+        .doc(cartId)
+        .collection("items");
 
-    const itemSnap = await cartItemsRef.doc(itemId).get();
-    if (itemSnap.exists) {
-      itemSnap.ref.update({
-        quantity: firebaseClient.firestore.FieldValue.increment(1),
-      });
-    } else {
-      itemSnap.ref.set({
-        quantity: 1,
-        ref: firebaseClient.firestore().collection("products").doc(itemId),
-      });
+      const itemSnap = await cartItemsRef.doc(itemId).get();
+      if (itemSnap.exists) {
+        itemSnap.ref.update({
+          quantity: firebaseClient.firestore.FieldValue.increment(1),
+        });
+      } else {
+        itemSnap.ref.set({
+          quantity: 1,
+          ref: firebaseClient.firestore().collection("products").doc(itemId),
+        });
+      }
+    } catch (error) {
+      setError(error);
     }
   };
 
@@ -104,6 +113,10 @@ const useCart = (cartId: string) => {
       return false;
     }
   };
+
+  useEffect(() => {
+    console.log(error);
+  }, [error]);
 
   return {
     addItem,

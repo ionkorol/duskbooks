@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
+import { useCompRender } from "../../hooks";
 import {
   AddressProp,
   BookDataProp,
@@ -32,9 +33,17 @@ const Paypal: React.FC<Props> = (props) => {
     onRun(shippingAddress, billingAddress, itemsData, userData, onPaid, paypal);
   }, []);
 
+  useCompRender(() => {
+    const script = document.createElement("script");
+    script.async = true;
+    script.src =
+      "https://www.paypal.com/sdk/js?client-id=AVazpM2HJg_XaoHT7TILEidPA_oPWiMxraxt8tufbxCGVu5JlK1S31zZxez1g5AzeXF6PBPKC17lNcVy";
+    //For head
+    document.head.appendChild(script);
+  });
+
   return (
     <div>
-      <script src="https://www.paypal.com/sdk/js?client-id=AVazpM2HJg_XaoHT7TILEidPA_oPWiMxraxt8tufbxCGVu5JlK1S31zZxez1g5AzeXF6PBPKC17lNcVy" />
       <div ref={paypal}></div>
     </div>
   );

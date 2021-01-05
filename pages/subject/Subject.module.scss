@@ -1,7 +1,7 @@
 .container {
   display: grid;
   justify-content: space-between;
-  grid-template-columns: repeat(5, 12vw);
+  grid-template-columns: repeat(5, 18%);
   row-gap: 50px;
 
   @media screen and (max-width: 600px) {

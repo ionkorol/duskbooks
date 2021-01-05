@@ -1,5 +1,5 @@
 import React from "react";
-import { useCart } from "../../hooks";
+import { useAuth, useCart } from "../../hooks";
 
 import styles from "./adt.module.scss";
 import { BookDataProp } from "../../utils/interfaces";
@@ -11,7 +11,10 @@ interface Props {
 const ADT: React.FC<Props> = (props) => {
   const { bookData } = props;
 
-  const cart = useCart();
+  const auth = useAuth();
+
+  const cartId = auth.user && auth.user.credentials.uid;
+  const cart = useCart(cartId);
 
   return (
     <div className={styles.container}>

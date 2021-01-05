@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React from "react";
-import { useCart } from "../../hooks";
+import { useAuth, useCart } from "../../hooks";
 import { BookDataProp } from "../../utils/interfaces";
 
 import styles from "./book.module.scss";
@@ -13,7 +13,10 @@ interface Props {
 const Book: React.FC<Props> = (props) => {
   const { bookData, loading } = props;
 
-  const cart = useCart();
+  const auth = useAuth();
+  const cartId = auth.user && auth.user.credentials.uid;
+
+  const cart = useCart(cartId);
 
   return (
     <div className={styles.contaier}>

@@ -163,7 +163,10 @@ const Checkout: React.FC<Props> = (props) => {
             />
           ) : page === "billing" ? (
             <>
-              <button onClick={() => setPage("shipping")}>Go Back</button>
+              <div
+                className={styles.backButton}
+                onClick={() => setPage("shipping")}
+              >{`<- Back`}</div>
               <Form>
                 <Form.Check
                   type="checkbox"
@@ -190,7 +193,10 @@ const Checkout: React.FC<Props> = (props) => {
             </>
           ) : (
             <>
-              <button onClick={() => setPage("billing")}>Go Back</button>
+              <div
+                className={styles.backButton}
+                onClick={() => setPage("billing")}
+              >{`<- Back`}</div>
 
               <Paypal
                 onPaid={onPaid}

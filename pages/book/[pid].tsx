@@ -4,15 +4,20 @@ import { ADT, BookShelf, Layout } from "../../components";
 import { server } from "../../config";
 
 import styles from "./Book.module.scss";
-import { BookDataProp } from "../../utils/interfaces";
+import { BookDataProp, FirebaseUserProp } from "../../utils/interfaces";
+import firebaseAdmin from "../../utils/firebaseAdmin";
+
+import nookies from "nookies";
 
 interface Props {
   bookData: BookDataProp;
+  userData: FirebaseUserProp | null;
+  uid: string;
+  error?: any;
 }
 
 const Book: React.FC<Props> = (props) => {
-  const { bookData } = props;
-  console.log(bookData);
+  const { bookData, userData, uid, error } = props;
 
   return (
     <Layout small>
@@ -85,17 +90,38 @@ const Book: React.FC<Props> = (props) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const bookId = ctx.query.pid;
+  try {
+    const cookies = nookies.get(ctx);
+    var uid = null;
+    var userData = null;
+    if (cookies.token) {
+      const token = await firebaseAdmin.auth().verifyIdToken(cookies.token);
+      uid = token.uid;
+    }
+    if (uid) {
+      userData = (
+        await firebaseAdmin.firestore().collection("users").doc(uid).get()
+      ).data();
+    }
 
-  const res = await fetch(`${server}/api/product/${bookId}`);
+    const bookId = ctx.query.pid;
+    const res = await fetch(`${server}/api/product/${bookId}`);
+    const bookJson = await res.json();
 
-  const bookJson = await res.json();
-
-  return {
-    props: {
-      bookData: bookJson.data,
-    },
-  };
+    return {
+      props: {
+        bookData: bookJson.data,
+        userData,
+        uid,
+      },
+    };
+  } catch (error) {
+    return {
+      props: {
+        error: JSON.stringify(error),
+      },
+    };
+  }
 };
 
 export default Book;

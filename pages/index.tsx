@@ -29,24 +29,21 @@ const Home = (props) => {
   );
 };
 
-
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  try {
-    const cookies = nookies.get(ctx);
+  const cookies = nookies.get(ctx);
+  var uid = null;
+  var userData = null;
+  if (cookies.token) {
     const token = await firebaseAdmin.auth().verifyIdToken(cookies.token);
-    const { uid, email } = token;
-
-    // FETCH STUFF HERE!! 🚀
-
-    return {
-      props: { message: `Your email is ${email} and your UID is ${uid}.` },
-    };
-  } catch (err) {
-    ctx.res.writeHead(302, { Location: "/auth/signin" });
-    ctx.res.end();
-
-    return { props: {} as never };
+    uid = token.uid;
   }
+
+  return {
+    props: {
+      uid,
+      userData,
+    },
+  };
 };
 
 export default Home;

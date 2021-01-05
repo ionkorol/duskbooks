@@ -1,7 +1,8 @@
-@import "../../styles/variables.scss";
-
-.container {
+.ordersContainer {
   display: flex;
   flex-direction: column;
   width: 100%;
+
+  .order {
+  }
 }
