@@ -205,7 +205,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const { uid, email } = token;
 
     if (!email) {
-      ctx.res.writeHead(302, { Location: "/auth/signin" });
+      ctx.res.writeHead(302, { Location: "/auth" });
       ctx.res.end();
 
       return { props: {} as never };

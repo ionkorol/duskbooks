@@ -10,7 +10,7 @@ export const AuthContext = createContext<{
   error: string | null;
   signIn: (email: string, password: string) => void;
   signOut: () => void;
-  signUp: (email: string, password: string) => void;
+  signUp: (firstName: string, lastName: string, email: string, password: string) => void;
 }>({
   user: null,
   error: null,
@@ -62,10 +62,30 @@ export default function AuthProvider({ children }: any) {
       .catch((error) => setError(error.message));
   };
 
-  const signUp = (email: string, password: string) => {
+  const signUp = (
+    firstName: string,
+    lastName: string,
+    email: string,
+    password: string
+  ) => {
     firebaseClient
       .auth()
       .createUserWithEmailAndPassword(email, password)
+      .then((user) => {
+        firebaseClient
+          .firestore()
+          .collection("users")
+          .doc(user.user.uid)
+          .set(
+            {
+              firstName,
+              lastName,
+              email,
+            },
+            { merge: true }
+          )
+          .catch((error) => setError(error.message));
+      })
       .then(() => {
         router.push("/account");
       })

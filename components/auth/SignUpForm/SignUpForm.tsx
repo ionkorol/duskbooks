@@ -94,12 +94,18 @@ const SignUpForm: React.FC<Props> = (props) => {
   };
 
   const cPasswordValidation = () => {
-    if (signUp.password && signUp.cPassword === signUp.password) {
+    if (signUp.password && signUp.cPassword !== signUp.password) {
       setSignUpError((prevState) => ({
         ...prevState,
         cPassword: "Passwords don't match!",
       }));
       return false;
+    } else {
+      setSignUpError((prevState) => ({
+        ...prevState,
+        cPassword: null,
+      }));
+      return true;
     }
   };
 
@@ -134,7 +140,7 @@ const SignUpForm: React.FC<Props> = (props) => {
     e.preventDefault();
     formValidation();
     if (formValidated) {
-      auth.signUp(signUp.email, signUp.password);
+      auth.signUp(signUp.firstName, signUp.lastName, signUp.email, signUp.password);
     }
   };
 
@@ -241,9 +247,7 @@ const SignUpForm: React.FC<Props> = (props) => {
           {signUpError.cPassword}
         </Form.Control.Feedback>
       </Form.Group>
-      <button type="submit">
-        Sign Up
-      </button>
+      <button type="submit">Sign Up</button>
     </Form>
   );
 };
