@@ -43,10 +43,11 @@ const Book: React.FC<Props> = (props) => {
         $ {loading ? "loading price" : bookData.salePrice}
       </p>
       <button
+        disabled={bookData ? !bookData.stock : true}
         className={styles.adt}
         onClick={() => cart.addItem(bookData.isbn13)}
       >
-        Add To Cart
+        {bookData && !bookData.stock ? "Out of Stock" : "Add To Cart"}
       </button>
     </div>
   );

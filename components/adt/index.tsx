@@ -53,8 +53,11 @@ const ADT: React.FC<Props> = (props) => {
         </div>
       </div>
       <div className={styles.buttons}>
-        <button onClick={() => cart.addItem(bookData.isbn13)}>
-          Add To Cart
+        <button
+          disabled={!bookData.stock}
+          onClick={() => cart.addItem(bookData.isbn13)}
+        >
+          {!bookData.stock ? "Out of Stock" : "Add To Cart"}
         </button>
         <button>Add To Wishlist</button>
       </div>
