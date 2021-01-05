@@ -15,7 +15,6 @@ var firebaseConfig = {
 
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
-  firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 }
 
 export default firebase;
