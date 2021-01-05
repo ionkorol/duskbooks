@@ -77,7 +77,7 @@ export default function AuthProvider({ children }: any) {
       .auth()
       .signOut()
       .then(() => {
-        router.push("/auth/signin");
+        router.push("/auth");
       })
       .catch((error) => setError(error.message));
   };
