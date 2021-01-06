@@ -18,7 +18,6 @@ interface Props {
 
 const Book: React.FC<Props> = (props) => {
   const { bookData, userData, uid, error } = props;
-  console.log(bookData)
 
   return (
     <Layout small>
