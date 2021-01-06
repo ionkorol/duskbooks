@@ -43,7 +43,6 @@ const Cart: React.FC<Props> = (props) => {
         quantity,
       }),
     });
-    console.log(await res.json());
   };
 
   const deleteItem = async (itemId: string) => {
@@ -58,7 +57,6 @@ const Cart: React.FC<Props> = (props) => {
         itemId,
       }),
     });
-    console.log(await res.json());
   };
 
   // Real Time Updates

@@ -107,11 +107,6 @@ const Checkout: React.FC<Props> = (props) => {
   };
 
   useEffect(() => {
-    console.log(shippingAddress);
-    console.log(billingAddress);
-  }, [shippingAddress, billingAddress]);
-
-  useEffect(() => {
     if (sameShipping) {
       setBillingAddress(shippingAddress);
     }

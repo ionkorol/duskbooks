@@ -20,7 +20,6 @@ const useCart = (cartId: string) => {
       const cartSnap = await cartItemsRef.get();
       for (const itemSnap of cartSnap.docs) {
         const itemData = itemSnap.data() as CartItemProp;
-        console.log(itemData.ref.id);
         const prodData = (
           await firebaseClient
             .firestore()
@@ -113,10 +112,6 @@ const useCart = (cartId: string) => {
       return false;
     }
   };
-
-  useEffect(() => {
-    console.log(error);
-  }, [error]);
 
   return {
     addItem,

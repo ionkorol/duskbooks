@@ -25,7 +25,6 @@ const Paypal: React.FC<Props> = (props) => {
 
   const paypal = useRef(null);
 
-  console.log(process.env.PAYPAL_API_KEY);
   useEffect(() => {
     const script = document.createElement("script");
     script.type = "text/javascript";

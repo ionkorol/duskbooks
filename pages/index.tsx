@@ -10,7 +10,6 @@ import nookies from "nookies";
 import styles from "styles/Home.module.scss";
 
 const Home = (props) => {
-  console.log(props.message);
 
   return (
     <Layout title="Books and other Media Products | DuskBooks.com">

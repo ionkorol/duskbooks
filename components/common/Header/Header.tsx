@@ -38,7 +38,6 @@ const SearchForm = () => {
 
 const TopMenu = (props) => {
   const auth = useAuth();
-  console.log(auth.user);
   return (
     <div className={styles.topMenu}>
       <div className={styles.logo}>

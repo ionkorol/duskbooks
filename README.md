@@ -46,6 +46,10 @@
 - [ ] Whishlist Functionality
 - [ ] Description Height and Read More
 
+### Contact Page
+
+- [ ] Send Email Func
+
 ## Components
 
 ### Navigation
