@@ -61,8 +61,16 @@ const MiniCart: React.FC<Props> = (props) => {
         ))
       )}
       <div className={styles.cartTotal}>
-        <div>Total:</div>
+        <div>Subtotal:</div>
         <div>${totalPrice}</div>
+      </div>
+      <div className={styles.cartTotal}>
+        <div>Shipping:</div>
+        <div>$3.99</div>
+      </div>
+      <div className={styles.cartTotal}>
+        <div>Total:</div>
+        <div>${(totalPrice + 3.99).toFixed(2)}</div>
       </div>
     </div>
   );

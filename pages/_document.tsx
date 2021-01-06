@@ -10,6 +10,10 @@ export default class CustomDocument extends Document {
     return (
       <Html>
         <Head>
+          <meta
+            name="google-site-verification"
+            content="YuaQ4dROlNtNXEKjUQNFh--EaV21Nco0sXs3J7coIMU"
+          />
         </Head>
         <body>
           <Main />
