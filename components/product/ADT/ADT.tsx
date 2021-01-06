@@ -1,8 +1,8 @@
 import React from "react";
-import { useAuth, useCart } from "../../hooks";
+import { useAuth, useCart } from "hooks";
 
-import styles from "./adt.module.scss";
-import { BookDataProp } from "../../utils/interfaces";
+import styles from "./ADT.module.scss";
+import { BookDataProp } from "utils/interfaces";
 
 interface Props {
   bookData: BookDataProp;

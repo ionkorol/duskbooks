@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BookDataProp } from "../../../utils/interfaces";
+import { BookDataProp } from "utils/interfaces";
 
 import styles from "./MiniCart.module.scss";
 interface Props {

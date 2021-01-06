@@ -1,14 +1,15 @@
-import { GetServerSideProps } from "next";
 import React, { useEffect, useState } from "react";
+import { GetServerSideProps } from "next";
+import Link from "next/link";
 import { Form, Table } from "react-bootstrap";
-import { Layout } from "../../components";
-import firebaseAdmin from "../../utils/firebaseAdmin";
 import firebaseClient from "../../utils/firebaseClient";
 import { BookDataProp } from "../../utils/interfaces";
+import { Layout } from "components/common";
+
+import firebaseAdmin from "../../utils/firebaseAdmin";
 import nookies from "nookies";
 
 import styles from "./Cart.module.scss";
-import Link from "next/link";
 
 interface Props {
   cartItems: { data: BookDataProp; quantity: number }[];

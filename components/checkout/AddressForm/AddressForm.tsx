@@ -1,14 +1,7 @@
-import {
-  Dispatch,
-  FormEvent,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Form, Col } from "react-bootstrap";
-import { useCompRender, useCompUpdate } from "../../../hooks";
-import { AddressProp } from "../../../utils/interfaces";
+import { useCompUpdate } from "hooks";
+import { AddressProp } from "utils/interfaces";
 
 import styles from "./AddressForm.module.scss";
 

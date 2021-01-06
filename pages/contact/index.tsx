@@ -1,10 +1,10 @@
 import { GetServerSideProps } from "next";
 import React, { useState } from "react";
 import { Form } from "react-bootstrap";
-import { Layout } from "../../components";
-import { useCompRender, useCompUpdate } from "../../hooks";
-import firebaseAdmin from "../../utils/firebaseAdmin";
-import { FirebaseUserProp } from "../../utils/interfaces";
+import { Layout } from "components/common";
+import { useCompUpdate } from "hooks";
+import firebaseAdmin from "utils/firebaseAdmin";
+import { FirebaseUserProp } from "utils/interfaces";
 import nookies from "nookies";
 
 import styles from "./Contact.module.scss";

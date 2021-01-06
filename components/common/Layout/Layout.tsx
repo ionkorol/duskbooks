@@ -1,7 +1,6 @@
 import React from "react";
-import { Header } from "../";
-import Navigation from "../navigation";
-import styles from "./layout.module.scss";
+import { Header, Navigation } from "components/common";
+import styles from "./Layout.module.scss";
 
 interface Props {
   small?: boolean;

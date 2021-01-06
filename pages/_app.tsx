@@ -1,12 +1,10 @@
 import { AppProps } from "next/app";
-import "../styles/globals.scss";
-import Router from "next/router";
-import NProgress from "nprogress";
-import "nprogress/nprogress.css"; //styles of nprogress
 import "nprogress";
-import NextNProgress from "../components/pageTransition";
+import { PageTransition } from "components/common";
+import AuthProvider from "utils/AuthProvider";
 
-import AuthProvider from "../utils/AuthProvider";
+import "styles/globals.scss";
+import "nprogress/nprogress.css";
 
 // Router.events.on("routeChangeStart", () => NProgress.start());
 // Router.events.on("routeChangeComplete", () => NProgress.done());
@@ -15,7 +13,7 @@ import AuthProvider from "../utils/AuthProvider";
 const App = ({ Component, pageProps }: AppProps) => {
   return (
     <AuthProvider>
-      <NextNProgress
+      <PageTransition
         color="#fda87a"
         startPosition={0.3}
         stopDelayMs={200}

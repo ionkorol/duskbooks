@@ -1,12 +1,14 @@
-import { GetServerSideProps } from "next";
 import React, { useState } from "react";
+import { GetServerSideProps } from "next";
 import { Form } from "react-bootstrap";
-import { useCompUpdate } from "../../hooks";
-import firebaseAdmin from "../../utils/firebaseAdmin";
-import { UserWithOrdersProp } from "../../utils/interfaces";
+import { useCompUpdate } from "hooks";
+import { UserWithOrdersProp } from "utils/interfaces";
+import { AccountLayout } from "components/account";
+
+import firebaseAdmin from "utils/firebaseAdmin";
 import nookies from "nookies";
+
 import styles from "./Account.module.scss";
-import { AccountLayout } from "../../components/account";
 
 interface Props {
   userData: UserWithOrdersProp;

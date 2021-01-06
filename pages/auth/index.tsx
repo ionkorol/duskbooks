@@ -1,12 +1,13 @@
-import nookies from "nookies";
-import { GetServerSideProps } from "next";
 import React, { useState } from "react";
-import { Layout } from "../../components";
+import { GetServerSideProps } from "next";
+import { Layout } from "components/common";
+import { SignInForm, SignUpForm } from "../../components/auth";
+import { useRouter } from "next/router";
+
+import nookies from "nookies";
 import firebaseAdmin from "../../utils/firebaseAdmin";
 
 import styles from "./Auth.module.scss";
-import { useRouter } from "next/router";
-import { SignInForm, SignUpForm } from "../../components/auth";
 
 interface Props {}
 

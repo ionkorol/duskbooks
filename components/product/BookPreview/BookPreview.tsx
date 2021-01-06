@@ -1,16 +1,16 @@
 import Link from "next/link";
 import React from "react";
-import { useAuth, useCart } from "../../hooks";
-import { BookDataProp } from "../../utils/interfaces";
+import { useAuth, useCart } from "hooks";
+import { BookDataProp } from "utils/interfaces";
 
-import styles from "./book.module.scss";
+import styles from "./BookPreview.module.scss";
 
 interface Props {
   bookData: BookDataProp;
   loading: boolean;
 }
 
-const Book: React.FC<Props> = (props) => {
+const BookPreview: React.FC<Props> = (props) => {
   const { bookData, loading } = props;
 
   const auth = useAuth();
@@ -53,4 +53,4 @@ const Book: React.FC<Props> = (props) => {
   );
 };
 
-export default Book;
+export default BookPreview;

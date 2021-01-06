@@ -1,8 +1,9 @@
-import { GetServerSideProps } from "next";
-import { server } from "../../config";
 import React from "react";
-import { Book, Layout } from "../../components";
-import { BookDataProp } from "../../utils/interfaces";
+import { GetServerSideProps } from "next";
+import { server } from "config";
+import { BookDataProp } from "utils/interfaces";
+import { BookPreview } from "components/product";
+import { Layout } from "components/common";
 
 import styles from "./Subject.module.scss";
 
@@ -16,7 +17,11 @@ const Subject: React.FC<Props> = (props) => {
     <Layout>
       <div className={styles.container}>
         {products.map((product) => (
-          <Book bookData={product} loading={false} key={product.isbn13} />
+          <BookPreview
+            bookData={product}
+            loading={false}
+            key={product.isbn13}
+          />
         ))}
       </div>
     </Layout>

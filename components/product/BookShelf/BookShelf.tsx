@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Book } from "..";
+import { BookPreview } from "components/product";
 
-import styles from "./bookShelf.module.scss";
+import styles from "./BookShelf.module.scss";
 
 interface Props {
   subject: string;
@@ -35,11 +35,11 @@ const BookShelf: React.FC<Props> = (props) => {
         </p>
       </div>
       <div className={styles.list}>
-        <Book bookData={books[0]} loading={loading} />
-        <Book bookData={books[1]} loading={loading} />
-        <Book bookData={books[2]} loading={loading} />
-        <Book bookData={books[3]} loading={loading} />
-        <Book bookData={books[4]} loading={loading} />
+        <BookPreview bookData={books[0]} loading={loading} />
+        <BookPreview bookData={books[1]} loading={loading} />
+        <BookPreview bookData={books[2]} loading={loading} />
+        <BookPreview bookData={books[3]} loading={loading} />
+        <BookPreview bookData={books[4]} loading={loading} />
       </div>
     </div>
   );

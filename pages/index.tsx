@@ -1,10 +1,13 @@
-import Head from "next/head";
-import { BookShelf, Layout } from "../components";
-import styles from "../styles/Home.module.scss";
-
-import nookies from "nookies";
-import firebaseAdmin from "../utils/firebaseAdmin";
+import React from "react";
 import { GetServerSidePropsContext } from "next";
+
+import { Layout } from "components/common";
+import { BookShelf } from "components/product";
+
+import firebaseAdmin from "utils/firebaseAdmin";
+import nookies from "nookies";
+
+import styles from "styles/Home.module.scss";
 
 const Home = (props) => {
   console.log(props.message);

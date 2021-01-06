@@ -1,13 +1,14 @@
-import { GetServerSideProps } from "next";
 import React from "react";
-import { AccountLayout } from "../../../components/account";
-import nookies from "nookies";
-import firebaseAdmin from "../../../utils/firebaseAdmin";
-import { FirebaseUserProp, OrderProp } from "../../../utils/interfaces";
+import { GetServerSideProps } from "next";
+import { AccountLayout } from "components/account";
+import { FirebaseUserProp, OrderProp } from "utils/interfaces";
 import { Alert, Table } from "react-bootstrap";
+import { server } from "config";
+
+import nookies from "nookies";
+import firebaseAdmin from "utils/firebaseAdmin";
 
 import styles from "./Order.module.scss";
-import { server } from "../../../config";
 
 interface Props {
   uid: string;

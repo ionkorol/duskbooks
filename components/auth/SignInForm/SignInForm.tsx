@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from "react";
 import { Form } from "react-bootstrap";
-import { useAuth, useCompUpdate } from "../../../hooks";
+import { useAuth, useCompUpdate } from "hooks";
 
 interface Props {}
 

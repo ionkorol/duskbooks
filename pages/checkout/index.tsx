@@ -1,17 +1,16 @@
+import React, { useEffect, useRef, useState } from "react";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import React, { useEffect, useRef, useState } from "react";
-import { Layout, Paypal } from "../../components";
-import { useCart } from "../../hooks";
-import firebaseAdmin from "../../utils/firebaseAdmin";
-import {
-  BookDataProp,
-  FirebaseUserProp,
-} from "../../utils/interfaces";
-import styles from "./Checkout.module.scss";
-import nookies from "nookies";
-import { AddressForm, MiniCart } from "../../components/checkout";
+import { useCart } from "hooks";
+import { BookDataProp, FirebaseUserProp } from "utils/interfaces";
+import { AddressForm, MiniCart, Paypal } from "components/checkout";
 import { Alert, Form } from "react-bootstrap";
+import { Layout } from "components/common";
+
+import nookies from "nookies";
+import firebaseAdmin from "utils/firebaseAdmin";
+
+import styles from "./Checkout.module.scss";
 
 interface Props {
   itemsData: { quantity: number; data: BookDataProp }[];

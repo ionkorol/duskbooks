@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from "react";
 import { Col, Form } from "react-bootstrap";
-import { useAuth, useCompUpdate } from "../../../hooks";
+import { useAuth, useCompUpdate } from "hooks";
 
 interface Props {}
 
@@ -140,7 +140,12 @@ const SignUpForm: React.FC<Props> = (props) => {
     e.preventDefault();
     formValidation();
     if (formValidated) {
-      auth.signUp(signUp.firstName, signUp.lastName, signUp.email, signUp.password);
+      auth.signUp(
+        signUp.firstName,
+        signUp.lastName,
+        signUp.email,
+        signUp.password
+      );
     }
   };
 

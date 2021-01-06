@@ -5,6 +5,7 @@
 - [ ] Search Bar Functionality
 - [x] Implement persistance for users and guests
 - [ ] Different screen size adjustments
+- [ ] Folder structure
 
 ## Pages
 
@@ -33,11 +34,11 @@
 
 ### Home Page
 
-- [ ] Book Shelves
+- [x] Book Shelves
 
 ### Subject Page
 
-- [ ] Link Error
+- [x] Link Error
 
 ### Book Page
 

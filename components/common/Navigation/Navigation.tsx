@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import firebaseClient from "../../utils/firebaseClient";
+import firebaseClient from "utils/firebaseClient";
 
-import styles from "./navigation.module.scss";
+import styles from "./Navigation.module.scss";
 import Link from "next/link";
-import { useAuth } from "../../hooks";
-import { BookDataProp } from "../../utils/interfaces";
+import { useAuth } from "hooks";
+import { BookDataProp } from "utils/interfaces";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartPlus } from "@fortawesome/free-solid-svg-icons";
 

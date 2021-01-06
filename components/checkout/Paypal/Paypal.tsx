@@ -1,10 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
-import { useCompRender } from "../../hooks";
-import {
-  AddressProp,
-  BookDataProp,
-  FirebaseUserProp,
-} from "../../utils/interfaces";
+import { useCompRender } from "hooks";
+import { AddressProp, BookDataProp, FirebaseUserProp } from "utils/interfaces";
 import { onRun } from "./functions";
 
 interface Props {
@@ -29,12 +25,11 @@ const Paypal: React.FC<Props> = (props) => {
 
   const paypal = useRef(null);
 
-  console.log(process.env.PAYPAL_API_KEY)
+  console.log(process.env.PAYPAL_API_KEY);
   useEffect(() => {
     const script = document.createElement("script");
     script.type = "text/javascript";
-    script.src =
-      `https://www.paypal.com/sdk/js?client-id=${process.env.NEXT_PUBLIC_PAYPAL_API_KEY}`;
+    script.src = `https://www.paypal.com/sdk/js?client-id=${process.env.NEXT_PUBLIC_PAYPAL_API_KEY}`;
     //For head
     document.head.appendChild(script);
     script.onload = () => {

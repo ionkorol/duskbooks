@@ -1,9 +1,10 @@
+import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
-import { Layout } from "../..";
-import { useAuth } from "../../../hooks";
-import { FirebaseUserProp } from "../../../utils/interfaces";
+import { Layout } from "components/common";
+import { useAuth } from "hooks";
+import { FirebaseUserProp } from "utils/interfaces";
+
 import styles from "./AccountLayout.module.scss";
 
 interface Props {

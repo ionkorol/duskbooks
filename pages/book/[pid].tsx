@@ -1,13 +1,14 @@
-import { GetServerSideProps } from "next";
 import React from "react";
-import { ADT, BookShelf, Layout } from "../../components";
-import { server } from "../../config";
+import { GetServerSideProps } from "next";
+import { ADT, BookShelf } from "components/product";
+import { server } from "config";
+import { Layout } from "components/common";
+import { BookDataProp, FirebaseUserProp } from "utils/interfaces";
+
+import firebaseAdmin from "utils/firebaseAdmin";
+import nookies from "nookies";
 
 import styles from "./Book.module.scss";
-import { BookDataProp, FirebaseUserProp } from "../../utils/interfaces";
-import firebaseAdmin from "../../utils/firebaseAdmin";
-
-import nookies from "nookies";
 
 interface Props {
   bookData: BookDataProp;

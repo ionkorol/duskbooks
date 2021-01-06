@@ -1,9 +1,10 @@
 import Link from "next/link";
 import React from "react";
-import { BookShelf, Navigation } from "../";
-import { useAuth } from "../../hooks";
+import { Navigation } from "components/common";
+import { useAuth } from "hooks";
 
-import styles from "./header.module.scss";
+import styles from "./Header.module.scss";
+import { BookShelf } from "components/product";
 
 interface Props {
   small?: boolean;
