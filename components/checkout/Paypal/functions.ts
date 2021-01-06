@@ -1,9 +1,5 @@
-import firebaseClient from "../../utils/firebaseClient";
-import {
-  AddressProp,
-  BookDataProp,
-  FirebaseUserProp,
-} from "../../utils/interfaces";
+import firebaseClient from "utils/firebaseClient";
+import { AddressProp, BookDataProp, FirebaseUserProp } from "utils/interfaces";
 import { CreateOrderObj } from "./interfaces";
 
 export const onRun = async (
