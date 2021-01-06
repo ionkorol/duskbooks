@@ -2,10 +2,12 @@
 
 .container {
   padding: 3vh 20vw;
-
   background-color: $primary-light;
-
   color: white;
+
+  @media screen and (max-width: $screen-s) {
+    padding: 3vh 10vw;
+  }
 }
 
 .topMenu {
@@ -17,7 +19,6 @@
     font-size: 2rem;
     color: $secondary-light;
     margin: 0 0 3vh 0;
-
   }
   div {
     display: flex;
