@@ -20,7 +20,7 @@ const AccountLayout: React.FC<Props> = (props) => {
   const pathArray = router.pathname.split("/");
 
   return (
-    <Layout small>
+    <Layout title="My Account | DuskBooks.com" small>
       <div className={styles.container}>
         <div className={styles.sidebar}>
           <div className={styles.profile}>

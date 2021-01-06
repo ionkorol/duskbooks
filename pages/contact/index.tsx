@@ -18,7 +18,7 @@ const Contact: React.FC<Props> = (props) => {
   const { uid, userData } = props;
 
   return (
-    <Layout>
+    <Layout title="Contact Us | DuskBooks.com" >
       <h2 className={styles.title}>Contact Us</h2>
 
       <div className={styles.container}>

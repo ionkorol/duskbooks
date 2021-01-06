@@ -6,6 +6,7 @@ import { BookPreview } from "components/product";
 import { Layout } from "components/common";
 
 import styles from "./Subject.module.scss";
+import { useRouter } from "next/router";
 
 interface Props {
   products: BookDataProp[];
@@ -13,8 +14,11 @@ interface Props {
 
 const Subject: React.FC<Props> = (props) => {
   const { products } = props;
+
+  const router = useRouter()
+
   return (
-    <Layout>
+    <Layout title={`${router.query.subject} | DuskBooks.com`}>
       <div className={styles.container}>
         {products.map((product) => (
           <BookPreview

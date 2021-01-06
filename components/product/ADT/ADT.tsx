@@ -3,6 +3,12 @@ import { useAuth, useCart } from "hooks";
 
 import styles from "./ADT.module.scss";
 import { BookDataProp } from "utils/interfaces";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCreditCard,
+  faShippingFast,
+  faUndoAlt,
+} from "@fortawesome/free-solid-svg-icons";
 
 interface Props {
   bookData: BookDataProp;
@@ -25,31 +31,16 @@ const ADT: React.FC<Props> = (props) => {
       </div>
       <div className={styles.perks}>
         <div>
-          <img
-            src="https://cdn1.iconfinder.com/data/icons/shopping-and-commerce-filled/512/Shopping_and_Commerce_-_filled_20-512.png"
-            alt="Fast Shipping"
-            width={50}
-            height={50}
-          />
+          <FontAwesomeIcon icon={faShippingFast} size="2x" fixedWidth />
           <p>Fast Delivery Across US</p>
         </div>
         <div>
-          <img
-            src="https://cdn1.iconfinder.com/data/icons/shopping-and-commerce-filled/512/Shopping_and_Commerce_-_filled_20-512.png"
-            alt="Fast Shipping"
-            width={50}
-            height={50}
-          />
-          <p>Fast Delivery Across US</p>
+          <FontAwesomeIcon icon={faCreditCard} size="2x" fixedWidth />
+          <p>100% Secure Payment</p>
         </div>
         <div>
-          <img
-            src="https://cdn1.iconfinder.com/data/icons/shopping-and-commerce-filled/512/Shopping_and_Commerce_-_filled_20-512.png"
-            alt="Fast Shipping"
-            width={50}
-            height={50}
-          />
-          <p>Fast Delivery Across US</p>
+          <FontAwesomeIcon icon={faUndoAlt} size="2x" fixedWidth />
+          <p>Free Returns Within 30 Days</p>
         </div>
       </div>
       <div className={styles.buttons}>

@@ -10,6 +10,7 @@ export default class CustomDocument extends Document {
     return (
       <Html>
         <Head>
+          <link rel="shortcut icon" href="favicon.png" />
           <meta
             name="google-site-verification"
             content="YuaQ4dROlNtNXEKjUQNFh--EaV21Nco0sXs3J7coIMU"

@@ -5,7 +5,8 @@
 - [ ] Search Bar Functionality
 - [x] Implement persistance for users and guests
 - [ ] Different screen size adjustments
-- [ ] Folder structure
+- [x] Folder structure
+- [x] Set each page title
 
 ## Pages
 

@@ -13,7 +13,7 @@ const Home = (props) => {
   console.log(props.message);
 
   return (
-    <Layout>
+    <Layout title="Books and other Media Products | DuskBooks.com">
       <div className={styles.container}>
         <div className={styles.section}>
           <BookShelf subject={"Young Adult Nonfiction"} />

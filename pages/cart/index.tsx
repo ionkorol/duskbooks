@@ -89,7 +89,7 @@ const Cart: React.FC<Props> = (props) => {
   }, []);
 
   return (
-    <Layout small>
+    <Layout title="Cart | DuskBooks.com" small>
       <div className={styles.container}>
         <Table striped>
           <thead>

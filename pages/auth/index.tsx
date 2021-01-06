@@ -17,7 +17,7 @@ const Signin: React.FC<Props> = (props) => {
   const router = useRouter();
 
   return (
-    <Layout small>
+    <Layout title="Authenticate | DuskBooks.com" small>
       <div className={styles.container}>
         <div>
           <SignInForm />

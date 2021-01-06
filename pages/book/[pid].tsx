@@ -21,7 +21,7 @@ const Book: React.FC<Props> = (props) => {
   const { bookData, userData, uid, error } = props;
 
   return (
-    <Layout small>
+    <Layout title={`${bookData.title} by ${bookData.contributor1}`} small>
       <div className={styles.container}>
         <div className={styles.cover}>
           <img

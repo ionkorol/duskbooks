@@ -126,7 +126,7 @@ const Checkout: React.FC<Props> = (props) => {
   };
 
   return (
-    <Layout small>
+    <Layout title="Checkout | DuskBooks.com" small>
       <div className={styles.container}>
         <div className={styles.leftContainer}>
           <Alert variant="dangerous">{error}</Alert>
