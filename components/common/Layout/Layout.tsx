@@ -5,6 +5,7 @@ import styles from "./Layout.module.scss";
 import Head from "next/head";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
 
 interface Props {
   small?: boolean;
@@ -42,7 +43,10 @@ const Layout: React.FC<Props> = (props) => {
         </div>
       </div>
       <div className={styles.copyright}>
-        © 2021 DuskBooks.com. All rights reserved.
+        © 2021 DuskBooks.com. All rights reserved. |{" "}
+        <Link href="/policy/tos">Terms of Service Policy</Link> |{" "}
+        <Link href="/policy/privacy">Privacy Policy</Link> |{" "}
+        <Link href="/policy/return">Return and Refund Policy</Link>
       </div>
     </div>
   );

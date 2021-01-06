@@ -50,5 +50,9 @@
 .copyright {
   padding: 10px 20vw;
   background-color: $primary-light;
-  color: $secondary-light;
+  color: white;
+
+  a {
+    color: $secondary-light;
+  }
 }
