@@ -1,7 +1,8 @@
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import firebaseClient from "../utils/firebaseClient";
 import { CartItemProp } from "../utils/interfaces";
+import { toast } from "react-toastify";
 
 const useCart = (cartId: string) => {
   const [error, setError] = useState<string | null>(null);
@@ -43,54 +44,80 @@ const useCart = (cartId: string) => {
       router.push("/auth");
     }
     try {
-      const cartItemsRef = firebaseClient
-        .firestore()
-        .collection("shoppingCarts")
-        .doc(cartId)
-        .collection("items");
-
-      const itemSnap = await cartItemsRef.doc(itemId).get();
-      if (itemSnap.exists) {
-        itemSnap.ref.update({
-          quantity: firebaseClient.firestore.FieldValue.increment(1),
-        });
+      const res = await fetch("/api/cart/items", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: cartId,
+          itemId,
+        }),
+      });
+      const jsonData = await res.json();
+      if (jsonData.status) {
+        toast.success("Item Added!");
+        return true;
       } else {
-        itemSnap.ref.set({
-          quantity: 1,
-          ref: firebaseClient.firestore().collection("products").doc(itemId),
-        });
+        toast.error(jsonData.error);
+        return false;
       }
     } catch (error) {
       setError(error);
+      toast.error(error);
     }
   };
 
   const removeItem = async (itemId: string) => {
-    const cartItemsRef = firebaseClient
-      .firestore()
-      .collection("shoppingCarts")
-      .doc(cartId)
-      .collection("items");
     try {
-      await cartItemsRef.doc(itemId).delete();
-      return true;
+      const res = await fetch("/api/cart/items", {
+        method: "DELETE",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: cartId,
+          itemId,
+        }),
+      });
+      const jsonData = await res.json();
+      if (jsonData.status) {
+        toast.success("Item Removed!");
+        return true;
+      } else {
+        toast.error(jsonData.error);
+        return false;
+      }
     } catch (error) {
+      toast.error(error);
       return false;
     }
   };
 
   const changeItemQuantity = async (itemId: string, itemQuantity: number) => {
-    const cartItemRef = firebaseClient
-      .firestore()
-      .collection("shoppingCarts")
-      .doc(cartId)
-      .collection("items")
-      .doc(itemId);
     try {
-      await cartItemRef.update({
-        quantity: itemQuantity,
+      const res = await fetch("/api/cart/items", {
+        method: "PATCH",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: cartId,
+          itemId,
+          quantity: itemQuantity,
+        }),
       });
-      return true;
+      const jsonData = await res.json();
+      if (jsonData.status) {
+        toast.success("Quantity Changed!");
+        return true;
+      } else {
+        toast.error(jsonData.error);
+        return false;
+      }
     } catch (error) {
       return false;
     }

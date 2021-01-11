@@ -7,3 +7,7 @@ export const server = dev
   : test
   ? "https://duskbooks.com"
   : "https://duskbooks.com";
+
+export const paypalApiKey = prod
+  ? process.env.NEXT_PUBLIC_PAYPAL_API_KEY
+  : process.env.NEXT_PUBLIC_PAYPAL_API_KEY_DEV;

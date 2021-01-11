@@ -1,11 +1,13 @@
 import React from "react";
+import Link from "next/link";
+import Head from "next/head";
 import { Header, Navigation } from "components/common";
 
-import styles from "./Layout.module.scss";
-import Head from "next/head";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
-import Link from "next/link";
+import { ToastContainer } from "react-toastify";
+
+import styles from "./Layout.module.scss";
 
 interface Props {
   small?: boolean;
@@ -48,6 +50,7 @@ const Layout: React.FC<Props> = (props) => {
         <Link href="/policy/privacy">Privacy Policy</Link> |{" "}
         <Link href="/policy/return">Return and Refund Policy</Link>
       </div>
+      <ToastContainer position="bottom-center" />
     </div>
   );
 };

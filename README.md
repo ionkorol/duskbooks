@@ -7,6 +7,7 @@
 - [ ] Different screen size adjustments
 - [x] Folder structure
 - [x] Set each page title
+- [ ] Integrate API with hooks
 
 ## Pages
 
@@ -48,14 +49,14 @@
 
 ### Contact Page
 
-- [ ] Send Email Func
+- [x] Send Email Func
 
 ## Components
 
 ### Navigation
 
 - [ ] On hover cart functionality
-- [ ] Successful add notification
+- [x] Successful add notification
 
 ### Bookshelf
 

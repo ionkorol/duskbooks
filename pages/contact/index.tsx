@@ -3,8 +3,10 @@ import React, { useState } from "react";
 import { Form } from "react-bootstrap";
 import { Layout } from "components/common";
 import { useCompUpdate } from "hooks";
-import firebaseAdmin from "utils/firebaseAdmin";
 import { FirebaseUserProp } from "utils/interfaces";
+import { toast } from "react-toastify";
+
+import firebaseAdmin from "utils/firebaseAdmin";
 import nookies from "nookies";
 
 import styles from "./Contact.module.scss";
@@ -18,7 +20,7 @@ const Contact: React.FC<Props> = (props) => {
   const { uid, userData } = props;
 
   return (
-    <Layout title="Contact Us | DuskBooks.com" >
+    <Layout title="Contact Us | DuskBooks.com">
       <h2 className={styles.title}>Contact Us</h2>
 
       <div className={styles.container}>
@@ -72,6 +74,8 @@ const ContactForm: React.FC<CFProps> = (props) => {
 
   const [formValidated, setFormValidated] = useState(true);
 
+  const [sending, setSending] = useState(false);
+
   useCompUpdate(() => {
     emptyValidation(name, setNameError);
   }, [name]);
@@ -110,7 +114,31 @@ const ContactForm: React.FC<CFProps> = (props) => {
     e.preventDefault();
     formValidation();
     if (formValidated) {
-      console.log("Run");
+      setSending(true);
+      fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          from: email,
+          subject,
+          message: `${message}\n\nFrom: <${name}> ${email}`,
+        }),
+      })
+        .then((data) => {
+          toast.success("Email Sent");
+          setSending(false);
+          setSubject("");
+          setMessage("");
+          console.log("Email Info", data);
+        })
+        .catch((error) => {
+          toast.error(error);
+          setSending(false);
+        });
     }
   };
 
@@ -167,8 +195,8 @@ const ContactForm: React.FC<CFProps> = (props) => {
           {messageError}
         </Form.Control.Feedback>
       </Form.Group>
-      <button className={styles.sendForm} type="submit">
-        Send
+      <button disabled={sending} className={styles.sendForm} type="submit">
+        {sending ? "Sending..." : "Send"}
       </button>
     </Form>
   );

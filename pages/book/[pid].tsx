@@ -106,7 +106,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     }
 
     const bookId = ctx.query.pid;
-    const res = await fetch(`${server}/api/product/${bookId}`);
+    const res = await fetch(`${server}/api/products/${bookId}`);
     const bookJson = await res.json();
 
     return {

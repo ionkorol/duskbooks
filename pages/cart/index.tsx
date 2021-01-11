@@ -10,6 +10,7 @@ import firebaseAdmin from "../../utils/firebaseAdmin";
 import nookies from "nookies";
 
 import styles from "./Cart.module.scss";
+import { useCart } from "hooks";
 
 interface Props {
   cartItems: { data: BookDataProp; quantity: number }[];
@@ -21,7 +22,7 @@ const Cart: React.FC<Props> = (props) => {
   const [total, setTotal] = useState(0);
   const [currentCartItems, setCurrentCartItems] = useState(cartItems);
 
-  const calculateTotal = () => {};
+  const cart = useCart(uid);
 
   useEffect(() => {
     setTotal(0);
@@ -29,35 +30,6 @@ const Cart: React.FC<Props> = (props) => {
       setTotal((prevState) => prevState + item.quantity * item.data.salePrice)
     );
   }, [currentCartItems]);
-
-  const changeItemQuantity = async (itemId: string, quantity: number) => {
-    const res = await fetch("/api/cart/items", {
-      method: "PATCH",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userId: uid,
-        itemId,
-        quantity,
-      }),
-    });
-  };
-
-  const deleteItem = async (itemId: string) => {
-    const res = await fetch("/api/cart/items", {
-      method: "DELETE",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userId: uid,
-        itemId,
-      }),
-    });
-  };
 
   // Real Time Updates
   useEffect(() => {
@@ -118,7 +90,7 @@ const Cart: React.FC<Props> = (props) => {
                         as="select"
                         value={item.quantity}
                         onChange={(e) =>
-                          changeItemQuantity(
+                          cart.changeItemQuantity(
                             item.data.isbn13,
                             Number(e.target.value)
                           )
@@ -133,7 +105,7 @@ const Cart: React.FC<Props> = (props) => {
                 </td>
                 <td>
                   <button
-                    onClick={() => deleteItem(item.data.isbn13)}
+                    onClick={() => cart.removeItem(item.data.isbn13)}
                     style={{ width: "50px" }}
                   >
                     X
