@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { AppProps } from "next/app";
 import { PageTransition } from "components/common";
 import AuthProvider from "utils/AuthProvider";
-import TagManager from "react-gtm-module";
+import TagManager, { TagManagerArgs } from "react-gtm-module";
 import "nprogress";
 
 import "styles/globals.scss";
@@ -15,8 +15,10 @@ import "react-toastify/dist/ReactToastify.css";
 
 const App = ({ Component, pageProps }: AppProps) => {
   useEffect(() => {
-    const tagManagerArgs = {
-      gtmId: "G-B3Q7MSX0WR",
+    const tagManagerArgs: TagManagerArgs = {
+      gtmId: process.env.NEXT_PUBLIC_GTM_ID,
+      auth: process.env.NEXT_PUBLIC_GTM_AUTH,
+      preview: process.env.NEXT_PUBLIC_GTM_ENV,
     };
 
     TagManager.initialize(tagManagerArgs);

@@ -6,7 +6,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     const { from, subject, message } = req.body;
     var transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: process.env.SUPPORT_EMAIL_HOST,
+      port: 465,
+      secure: true,
       auth: {
         user: process.env.SUPPORT_EMAIL,
         pass: process.env.SUPPORT_EMAIL_PASSWORD,
@@ -14,8 +16,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     });
 
     var mailOptions: Mail.Options = {
-      from,
-      to: "contact@duskbooks.com",
+      from: process.env.SUPPORT_EMAIL,
+      to: process.env.SUPPORT_EMAIL,
       subject,
       text: message,
       sender: from,
@@ -33,8 +35,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         res.json({ status: true, data: info.response });
       }
     });
-    res.statusCode = 405;
-    res.end();
   } else {
     res.statusCode = 405;
     res.end();
