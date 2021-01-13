@@ -39,7 +39,6 @@ const AdminUsers: React.FC<Props> = (props) => {
                   {user.firstName} {user.lastName}
                 </td>
                 <td>{user.email}</td>
-                <td>{user.role}</td>
               </tr>
             ))}
           </tbody>
