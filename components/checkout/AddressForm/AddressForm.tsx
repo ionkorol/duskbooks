@@ -5,6 +5,8 @@ import { AddressProp } from "utils/interfaces";
 
 import styles from "./AddressForm.module.scss";
 
+import states from "./states.json";
+
 interface Props {
   title: string;
   onSubmit: () => any;
@@ -345,8 +347,9 @@ const AddressForm: React.FC<Props> = (props) => {
               required
             >
               <option>Choose...</option>
-              <option>Alabama</option>
-              <option>Georgia</option>
+              {states.map((state) => (
+                <option>{state}</option>
+              ))}
             </Form.Control>
             <Form.Control.Feedback type="invalid">
               {addressError.state}

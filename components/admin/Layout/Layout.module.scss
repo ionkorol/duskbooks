@@ -1,0 +1,30 @@
+@import "/styles/variables.scss";
+
+.container {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  outline: 1px solid red;
+  width: 15%;
+  padding: 20px;
+
+  .active {
+    background-color: $primary-light !important;
+  }
+
+  .menuItem {
+    padding: 20px;
+    background-color: rgba(128, 128, 128, 0.25);
+    margin-bottom: 20px;
+  }
+}
+
+.body {
+  width: 85%;
+  padding: 20px;
+}

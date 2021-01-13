@@ -257,7 +257,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       },
     };
   } catch (error) {
-    ctx.res.writeHead(302, { Location: "/auth/signin" });
+    ctx.res.writeHead(302, { Location: "/auth" });
     ctx.res.end();
     return {
       props: {} as never,

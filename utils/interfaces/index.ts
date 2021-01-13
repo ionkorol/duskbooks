@@ -78,6 +78,7 @@ export interface FirebaseUserProp {
   email: string;
   firstName: string;
   lastName: string;
+  role: "admin" | "user";
 }
 
 export interface UserProp {
