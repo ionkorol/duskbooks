@@ -61,6 +61,7 @@ export interface UserWithOrdersProp {
   lastName: string;
   email: string;
   orders: OrderProp[];
+  role: "admin" | "user";
 }
 
 export interface AddressProp {
