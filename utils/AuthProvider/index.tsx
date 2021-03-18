@@ -1,16 +1,21 @@
 import Cookies from "js-cookie";
 import { createContext, useEffect, useState } from "react";
 import firebaseClient from "../firebaseClient";
-import firebase from "firebase";
 import { useRouter } from "next/router";
-import { FirebaseUserProp, UserProp } from "../interfaces";
+import { UserProp } from "../interfaces";
+import users from "pages/api/users";
 
 export const AuthContext = createContext<{
   user: UserProp | null;
   error: string | null;
   signIn: (email: string, password: string) => void;
   signOut: () => void;
-  signUp: (firstName: string, lastName: string, email: string, password: string) => void;
+  signUp: (
+    firstName: string,
+    lastName: string,
+    email: string,
+    password: string
+  ) => void;
 }>({
   user: null,
   error: null,
@@ -25,28 +30,12 @@ export default function AuthProvider({ children }: any) {
 
   const router = useRouter();
   const getUser = async (user: firebaseClient.User) => {
-    // Create The Shopping Cart
-    const shoppingCartSnap = await firebaseClient
-      .firestore()
-      .collection("shoppingCarts")
-      .doc(user.uid)
-      .get();
-    if (!shoppingCartSnap.exists) {
-      await shoppingCartSnap.ref.set({
-        id: user.uid,
-      });
-    }
     firebaseClient
       .firestore()
       .collection("users")
       .doc(user.uid)
       .get()
-      .then((userSnap) =>
-        setUser({
-          data: userSnap.data() as FirebaseUserProp,
-          credentials: user,
-        })
-      )
+      .then((userSnap) => setUser(userSnap.data() as UserProp))
       .catch((error) => {
         setError(error.message);
       });
@@ -125,7 +114,9 @@ export default function AuthProvider({ children }: any) {
   useEffect(() => {
     const handle = setInterval(async () => {
       const user = firebaseClient.auth().currentUser;
-      if (user) await user.getIdToken(true);
+      if (user) {
+        await user.getIdToken(true);
+      }
     }, 10 * 60 * 1000);
 
     // Clean up setInterval

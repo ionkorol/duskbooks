@@ -2,7 +2,7 @@ import React from "react";
 import { useAuth, useCart } from "hooks";
 
 import styles from "./ADT.module.scss";
-import { BookDataProp } from "utils/interfaces";
+import { ProductProp } from "utils/interfaces";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCreditCard,
@@ -11,22 +11,22 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 interface Props {
-  bookData: BookDataProp;
+  data: ProductProp;
 }
 
 const ADT: React.FC<Props> = (props) => {
-  const { bookData } = props;
+  const { data } = props;
 
   const auth = useAuth();
 
-  const cartId = auth.user && auth.user.credentials.uid;
+  const cartId = auth.user && auth.user.id;
   const cart = useCart(cartId);
 
   return (
     <div className={styles.container}>
       <div className={styles.price}>
-        <p className={styles.current}>$ {bookData.salePrice}</p>
-        <p className={styles.initial}>$ {bookData.regPrice}</p>
+        <p className={styles.current}>$ {data.salePrice}</p>
+        <p className={styles.initial}>$ {data.regPrice}</p>
         <p className={styles.location}>Online</p>
       </div>
       <div className={styles.perks}>
@@ -45,10 +45,10 @@ const ADT: React.FC<Props> = (props) => {
       </div>
       <div className={styles.buttons}>
         <button
-          disabled={!bookData.stock}
-          onClick={() => cart.addItem(bookData.isbn13)}
+          disabled={!data.stock}
+          onClick={() => cart.addOrChangeItem(data.isbn13, 1)}
         >
-          {!bookData.stock ? "Out of Stock" : "Add To Cart"}
+          {!data.stock ? "Out of Stock" : "Add To Cart"}
         </button>
         <button>Add To Wishlist</button>
       </div>

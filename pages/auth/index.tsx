@@ -1,20 +1,15 @@
 import React, { useState } from "react";
 import { GetServerSideProps } from "next";
 import { Layout } from "components/common";
-import { SignInForm, SignUpForm } from "../../components/auth";
-import { useRouter } from "next/router";
-
-import nookies from "nookies";
-import firebaseAdmin from "../../utils/firebaseAdmin";
+import { SignInForm, SignUpForm } from "components/auth";
 
 import styles from "./Auth.module.scss";
+import { isAuth } from "utils/functions";
 
 interface Props {}
 
 const Signin: React.FC<Props> = (props) => {
   const [error, setError] = useState(null);
-
-  const router = useRouter();
 
   return (
     <Layout title="Authenticate | DuskBooks.com" small>
@@ -32,25 +27,16 @@ const Signin: React.FC<Props> = (props) => {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
-    const cookies = nookies.get(ctx);
-    const token = await firebaseAdmin.auth().verifyIdToken(cookies.token);
-
-    // the user is authenticated!
-    const { uid, email } = token;
-
-    if (email) {
-      // FETCH STUFF HERE!! 🚀
-      ctx.res.writeHead(302, { Location: "/" });
-      ctx.res.end();
-
-      return { props: {} as never };
-    }
-    return { props: {} as never };
+    const uid = await isAuth(ctx.req);
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
   } catch (error) {
     return {
-      props: {
-        error: JSON.stringify(error),
-      },
+      props: {} as never,
     };
   }
 };

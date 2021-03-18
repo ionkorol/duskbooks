@@ -3,17 +3,12 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { Layout } from "components/common";
 import { useAuth } from "hooks";
-import { FirebaseUserProp } from "utils/interfaces";
 
 import styles from "./AccountLayout.module.scss";
 
-interface Props {
-  userData: FirebaseUserProp;
-}
+interface Props {}
 
 const AccountLayout: React.FC<Props> = (props) => {
-  const { userData } = props;
-
   const router = useRouter();
 
   const auth = useAuth();
@@ -24,7 +19,7 @@ const AccountLayout: React.FC<Props> = (props) => {
       <div className={styles.container}>
         <div className={styles.sidebar}>
           <div className={styles.profile}>
-            {userData.firstName} {userData.lastName}
+            {auth.user && auth.user.firstName} {auth.user && auth.user.lastName}
           </div>
           <div className={styles.menu}>
             <Link href="/account" passHref>

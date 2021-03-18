@@ -1,25 +1,27 @@
 import React, { useEffect, useRef, useState } from "react";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import { useCart } from "hooks";
-import { BookDataProp, FirebaseUserProp } from "utils/interfaces";
-import { AddressForm, MiniCart, Paypal } from "components/checkout";
+import { useAuth, useCart } from "hooks";
+import { CartItemProp, ProductProp, UserProp } from "utils/interfaces";
+import { AddressForm, MiniCart, StripeForm } from "components/checkout";
 import { Alert, Form } from "react-bootstrap";
 import { Layout } from "components/common";
 
-import nookies from "nookies";
-import firebaseAdmin from "utils/firebaseAdmin";
-
 import styles from "./Checkout.module.scss";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import { isAuth } from "utils/functions";
 
 interface Props {
-  itemsData: { quantity: number; data: BookDataProp }[];
-  userData: FirebaseUserProp;
-  uid: string;
+  data: CartItemProp[];
 }
 
+const promise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY);
+
 const Checkout: React.FC<Props> = (props) => {
-  const { itemsData, userData, uid } = props;
+  const { data } = props;
+
+  console.log(data);
 
   const [billingAddress, setBillingAddress] = useState({
     firstName: "",
@@ -64,17 +66,14 @@ const Checkout: React.FC<Props> = (props) => {
 
   const [sameShipping, setSameShipping] = useState(false);
   const [saveInfo, setSaveInfo] = useState(false);
-  const [paymentType, setPaymentType] = useState<"Paypal" | "Card">("Paypal");
+  const [paymentType, setPaymentType] = useState<"Paypal" | "Stripe">("Stripe");
   const [page, setPage] = useState<"shipping" | "billing" | "payment">(
     "shipping"
   );
   const [error, setError] = useState(null);
-
-  const cart = useCart(uid);
+  const { user } = useAuth();
+  const cart = useCart(user && user.id);
   const router = useRouter();
-
-  const shippingForm = useRef(null);
-  const billingForm = useRef(null);
 
   const onPaid = async () => {
     try {
@@ -85,15 +84,14 @@ const Checkout: React.FC<Props> = (props) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          lineItems: itemsData,
-          userId: uid,
+          lineItems: data,
           paymentMethod: paymentType,
           shippingAddress,
           billingAddress,
         }),
       });
 
-      const orderId = (await res.json()).data.id;
+      const orderId = (await res.json()).id;
 
       // Clear Cart
       cart.clearCart();
@@ -172,18 +170,14 @@ const Checkout: React.FC<Props> = (props) => {
                 onClick={() => setPage("billing")}
               >{`<- Back`}</div>
 
-              <Paypal
-                onPaid={onPaid}
-                billingAddress={billingAddress}
-                shippingAddress={shippingAddress}
-                userData={userData}
-                itemsData={itemsData}
-              />
+              <Elements stripe={promise}>
+                <StripeForm onPaid={onPaid} data={data} />
+              </Elements>
             </>
           )}
         </div>
         <div className={styles.rightContainer}>
-          <MiniCart cart={cart} />
+          <MiniCart data={data} />
         </div>
       </div>
     </Layout>
@@ -194,55 +188,21 @@ export default Checkout;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
-    const cookies = nookies.get(ctx);
-    const token = await firebaseAdmin.auth().verifyIdToken(cookies.token);
-    const { uid, email } = token;
-
-    if (!email) {
-      ctx.res.writeHead(302, { Location: "/auth" });
-      ctx.res.end();
-
-      return { props: {} as never };
-    }
-
-    const userData = (
-      await firebaseAdmin.firestore().collection("users").doc(uid).get()
-    ).data();
-
-    // FETCH STUFF HERE!! 🚀
-
-    let itemsData = [];
-    const itemsSnap = await firebaseAdmin
-      .firestore()
-      .collection("shoppingCarts")
-      .doc(uid)
-      .collection("items")
-      .get();
-    const items = itemsSnap.docs;
-    for (const item of items) {
-      const itemData = item.data() as {
-        quantity: number;
-        ref: firebaseAdmin.firestore.DocumentReference;
-      };
-      const prodData = (await itemData.ref.get()).data();
-
-      itemsData.push({
-        quantity: itemData.quantity,
-        data: prodData,
-      });
-    }
+    const uid = await isAuth(ctx.req);
+    const data = await (
+      await fetch(`${process.env.SERVER}/api/users/${uid}/cart`)
+    ).json();
 
     return {
       props: {
-        itemsData: itemsData,
-        userData: userData ? userData : null,
-        uid,
+        data,
       },
     };
   } catch (error) {
     return {
-      props: {
-        error: JSON.stringify(error),
+      redirect: {
+        destination: "/",
+        permanent: false,
       },
     };
   }

@@ -45,7 +45,7 @@ const TopMenu = (props) => {
       </div>
       <div>
         <Link href="/">Home</Link>
-        {!!auth.user && !!auth.user.data ? (
+        {auth.user ? (
           <Link href="/account">
             <a>My Account</a>
           </Link>

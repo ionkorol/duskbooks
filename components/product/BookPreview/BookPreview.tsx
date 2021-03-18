@@ -1,20 +1,20 @@
 import Link from "next/link";
 import React from "react";
 import { useAuth, useCart } from "hooks";
-import { BookDataProp } from "utils/interfaces";
+import { ProductProp } from "utils/interfaces";
 
 import styles from "./BookPreview.module.scss";
 
 interface Props {
-  bookData: BookDataProp;
+  data: ProductProp;
   loading: boolean;
 }
 
 const BookPreview: React.FC<Props> = (props) => {
-  const { bookData, loading } = props;
+  const { data, loading } = props;
 
   const auth = useAuth();
-  const cartId = auth.user && auth.user.credentials.uid;
+  const cartId = auth.user && auth.user.id;
 
   const cart = useCart(cartId);
 
@@ -24,9 +24,9 @@ const BookPreview: React.FC<Props> = (props) => {
         src={
           loading
             ? "https://media1.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif"
-            : `http://images.amazon.com/images/P/${bookData.isbn10}.jpg`
+            : `http://images.amazon.com/images/P/${data.isbn10}.jpg`
         }
-        alt={loading ? "Loading Title" : bookData.title}
+        alt={loading ? "Loading Title" : data.title}
         width={150}
         height={200}
         className={styles.cover}
@@ -34,20 +34,20 @@ const BookPreview: React.FC<Props> = (props) => {
       <Link
         href={{
           pathname: "/book/[pid]",
-          query: { pid: bookData ? bookData.isbn13 : null },
+          query: { pid: data ? data.isbn13 : null },
         }}
       >
-        <a className={styles.link}>{loading ? "Loading..." : bookData.title}</a>
+        <a className={styles.link}>{loading ? "Loading..." : data.title}</a>
       </Link>
       <p className={styles.price}>
-        $ {loading ? "loading price" : bookData.salePrice}
+        $ {loading ? "loading price" : data.salePrice}
       </p>
       <button
-        disabled={bookData ? !bookData.stock : true}
+        disabled={data ? !data.stock : true}
         className={styles.adt}
-        onClick={() => cart.addItem(bookData.isbn13)}
+        onClick={() => cart.addOrChangeItem(data.isbn13, 1)}
       >
-        {bookData && !bookData.stock ? "Out of Stock" : "Add To Cart"}
+        {data && !data.stock ? "Out of Stock" : "Add To Cart"}
       </button>
     </div>
   );

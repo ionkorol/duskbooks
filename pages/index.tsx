@@ -4,13 +4,9 @@ import { GetServerSidePropsContext } from "next";
 import { Layout } from "components/common";
 import { BookShelf } from "components/product";
 
-import firebaseAdmin from "utils/firebaseAdmin";
-import nookies from "nookies";
-
 import styles from "styles/Home.module.scss";
 
 const Home = (props) => {
-
   return (
     <Layout title="Books and other Media Products | DuskBooks.com">
       <div className={styles.container}>
@@ -29,19 +25,8 @@ const Home = (props) => {
 };
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  const cookies = nookies.get(ctx);
-  var uid = null;
-  var userData = null;
-  if (cookies.token) {
-    const token = await firebaseAdmin.auth().verifyIdToken(cookies.token);
-    uid = token.uid;
-  }
-
   return {
-    props: {
-      uid,
-      userData,
-    },
+    props: {},
   };
 };
 

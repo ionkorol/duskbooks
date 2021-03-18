@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
 import { NextApiRequest, NextApiResponse } from "next";
-import firebaseAdmin from "../../../utils/firebaseAdmin";
+import firebaseAdmin from "utils/firebaseAdmin";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -12,11 +12,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       .limit(20)
       .get();
 
-    const prodsData = prodsQuery.docs.map((prod) => prod.data());
-    res.statusCode = 200;
-    res.json({ status: true, data: prodsData });
+    const data = prodsQuery.docs.map((prod) => prod.data());
+    res.status(200).json(data);
   } catch (error) {
-    res.statusCode = 200;
-    res.json({ status: false, data: error });
+    res.status(500).json(error);
   }
 };

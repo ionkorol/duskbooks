@@ -1,16 +1,19 @@
-import firebaseAdmin from "../firebaseAdmin";
-import firebaseClient from "../firebaseClient";
-
-export interface CartProp {
-  items: CartItemProp[];
+export interface UserProp {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  orders?: OrderProp[];
+  cart?: CartItemProp[];
 }
 
 export interface CartItemProp {
   quantity: number;
-  ref: firebaseAdmin.firestore.DocumentReference;
+  id?: string;
+  data?: ProductProp;
 }
 
-export interface BookDataProp {
+export interface ProductProp {
   isbn10: string;
   isbn13: string;
   title: string;
@@ -30,38 +33,15 @@ export interface BookDataProp {
 
 export interface OrderProp {
   id: number;
-  lineItems: { quantity: number; data: BookDataProp }[];
+  lineItems: { quantity: number; data: ProductProp }[];
   shippingPrice: number;
   totalPrice: number;
-  userId: string;
-  createdAt: { _seconds: number; _nanoseconds: number };
+  createdAt: number;
   fulfillmentStatus: "Processing" | "Shipped" | "Completed" | "Canceled";
   shippingAddress: AddressProp;
   billingAddress: AddressProp;
-  paymentMethod: "Paypal" | "Card";
+  paymentMethod: "Paypal" | "Stripe";
   itemsTotalPrice: number;
-}
-
-export interface OrderInProp {
-  id: number;
-  lineItems: { quantity: number; data: BookDataProp }[];
-  totalPrice: number;
-  userId: string;
-  createdAt: firebaseClient.firestore.FieldValue;
-  fulfillmentStatus: "Processing" | "Shipped" | "Completed" | "Canceled";
-  shippingAddress: AddressProp;
-  billingAddress: AddressProp;
-  paymentMethod: "Paypal" | "Card";
-  shippingPrice: number;
-  itemsTotalPrice: number;
-}
-
-export interface UserWithOrdersProp {
-  firstName: string;
-  lastName: string;
-  email: string;
-  orders: OrderProp[];
-  role: "admin" | "user";
 }
 
 export interface AddressProp {
@@ -73,16 +53,4 @@ export interface AddressProp {
   state: string | null;
   zip: string | null;
   country: string | null;
-}
-
-export interface FirebaseUserProp {
-  email: string;
-  firstName: string;
-  lastName: string;
-  role: "admin" | "user";
-}
-
-export interface UserProp {
-  credentials: firebaseClient.User;
-  data: FirebaseUserProp;
 }

@@ -1,7 +1,6 @@
 import React from "react";
 import { GetServerSideProps } from "next";
-import { server } from "config";
-import { BookDataProp } from "utils/interfaces";
+import { ProductProp } from "utils/interfaces";
 import { BookPreview } from "components/product";
 import { Layout } from "components/common";
 
@@ -9,23 +8,19 @@ import styles from "./Subject.module.scss";
 import { useRouter } from "next/router";
 
 interface Props {
-  products: BookDataProp[];
+  data: ProductProp[];
 }
 
 const Subject: React.FC<Props> = (props) => {
-  const { products } = props;
+  const { data } = props;
 
-  const router = useRouter()
+  const router = useRouter();
 
   return (
     <Layout title={`${router.query.subject} | DuskBooks.com`}>
       <div className={styles.container}>
-        {products.map((product) => (
-          <BookPreview
-            bookData={product}
-            loading={false}
-            key={product.isbn13}
-          />
+        {data.map((product) => (
+          <BookPreview data={product} loading={false} key={product.isbn13} />
         ))}
       </div>
     </Layout>
@@ -33,14 +28,26 @@ const Subject: React.FC<Props> = (props) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const res = await fetch(`${server}/api/subject/${ctx.query.subject}`);
-  const jsonData = await res.json();
+  const { subject } = ctx.query;
 
-  return {
-    props: {
-      products: jsonData.data,
-    },
-  };
+  try {
+    const data = await (
+      await fetch(`${process.env.SERVER}/api/subjects/${subject}`)
+    ).json();
+
+    return {
+      props: {
+        data,
+      },
+    };
+  } catch (error) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
 };
 
 export default Subject;

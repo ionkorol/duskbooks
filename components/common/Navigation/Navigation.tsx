@@ -4,7 +4,7 @@ import firebaseClient from "utils/firebaseClient";
 import styles from "./Navigation.module.scss";
 import Link from "next/link";
 import { useAuth } from "hooks";
-import { BookDataProp } from "utils/interfaces";
+import { CartItemProp, ProductProp } from "utils/interfaces";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartPlus } from "@fortawesome/free-solid-svg-icons";
 
@@ -15,14 +15,8 @@ const Navigation: React.FC<Props> = (props) => {
   const [subjects, setSubjects] = useState<string[]>([]);
 
   const auth = useAuth();
-  const userId = auth.user ? auth.user.credentials.uid : null;
 
-  const calculateTotalPrice = (
-    items: {
-      quantity: number;
-      data: BookDataProp;
-    }[]
-  ) => {
+  const calculateTotalPrice = (items: CartItemProp[]) => {
     setCartPrice(0);
     items.forEach((item) => {
       const itemPrice = item.quantity * item.data.salePrice;
@@ -37,34 +31,34 @@ const Navigation: React.FC<Props> = (props) => {
     setSubjects(jsonData.data);
   };
 
-  useEffect(() => {
-    if (userId) {
-      const unsub = firebaseClient
-        .firestore()
-        .collection("shoppingCarts")
-        .doc(userId)
-        .collection("items")
-        .onSnapshot(async (itemsSnap) => {
-          let itemsData = [];
-          for (const item of itemsSnap.docs) {
-            const itemData = item.data() as {
-              quantity: number;
-              ref: firebaseClient.firestore.DocumentReference;
-            };
-            const prodData = (
-              await firebaseClient.firestore().doc(itemData.ref.path).get()
-            ).data();
-            itemsData.push({
-              quantity: itemData.quantity,
-              data: prodData,
-            });
-          }
-          calculateTotalPrice(itemsData);
-        });
+  // useEffect(() => {
+  //   if (userId) {
+  //     const unsub = firebaseClient
+  //       .firestore()
+  //       .collection("shoppingCarts")
+  //       .doc(userId)
+  //       .collection("items")
+  //       .onSnapshot(async (itemsSnap) => {
+  //         let itemsData = [];
+  //         for (const item of itemsSnap.docs) {
+  //           const itemData = item.data() as {
+  //             quantity: number;
+  //             ref: firebaseClient.firestore.DocumentReference;
+  //           };
+  //           const prodData = (
+  //             await firebaseClient.firestore().doc(itemData.ref.path).get()
+  //           ).data();
+  //           itemsData.push({
+  //             quantity: itemData.quantity,
+  //             data: prodData,
+  //           });
+  //         }
+  //         calculateTotalPrice(itemsData);
+  //       });
 
-      return () => unsub();
-    }
-  }, []);
+  //     return () => unsub();
+  //   }
+  // }, []);
 
   useEffect(() => {
     getSubjects();

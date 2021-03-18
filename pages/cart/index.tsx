@@ -3,26 +3,25 @@ import { GetServerSideProps } from "next";
 import Link from "next/link";
 import { Form, Table } from "react-bootstrap";
 import firebaseClient from "../../utils/firebaseClient";
-import { BookDataProp } from "../../utils/interfaces";
+import { CartItemProp, ProductProp } from "../../utils/interfaces";
 import { Layout } from "components/common";
 
-import firebaseAdmin from "../../utils/firebaseAdmin";
-import nookies from "nookies";
-
 import styles from "./Cart.module.scss";
-import { useCart } from "hooks";
+import { useAuth, useCart } from "hooks";
+import { isAuth } from "utils/functions";
 
 interface Props {
-  cartItems: { data: BookDataProp; quantity: number }[];
-  uid: string;
+  data: CartItemProp[];
 }
 
 const Cart: React.FC<Props> = (props) => {
-  const { cartItems, uid } = props;
+  const { data } = props;
   const [total, setTotal] = useState(0);
-  const [currentCartItems, setCurrentCartItems] = useState(cartItems);
+  const [currentCartItems, setCurrentCartItems] = useState(data);
 
-  const cart = useCart(uid);
+  const auth = useAuth();
+
+  const cart = useCart(auth.user && auth.user.id);
 
   useEffect(() => {
     setTotal(0);
@@ -32,31 +31,31 @@ const Cart: React.FC<Props> = (props) => {
   }, [currentCartItems]);
 
   // Real Time Updates
-  useEffect(() => {
-    const unsub = firebaseClient
-      .firestore()
-      .collection("shoppingCarts")
-      .doc(uid)
-      .collection("items")
-      .onSnapshot(async (itemsSnap) => {
-        let itemsData = [];
-        for (const item of itemsSnap.docs) {
-          const itemData = item.data() as {
-            quantity: number;
-            ref: firebaseClient.firestore.DocumentReference;
-          };
-          const prodData = (
-            await firebaseClient.firestore().doc(itemData.ref.path).get()
-          ).data();
-          itemsData.push({
-            quantity: itemData.quantity,
-            data: prodData,
-          });
-        }
-        setCurrentCartItems(itemsData);
-      });
-    return () => unsub();
-  }, []);
+  // useEffect(() => {
+  //   const unsub = firebaseClient
+  //     .firestore()
+  //     .collection("shoppingCarts")
+  //     .doc(uid)
+  //     .collection("items")
+  //     .onSnapshot(async (itemsSnap) => {
+  //       let itemsData = [];
+  //       for (const item of itemsSnap.docs) {
+  //         const itemData = item.data() as {
+  //           quantity: number;
+  //           ref: firebaseClient.firestore.DocumentReference;
+  //         };
+  //         const prodData = (
+  //           await firebaseClient.firestore().doc(itemData.ref.path).get()
+  //         ).data();
+  //         itemsData.push({
+  //           quantity: itemData.quantity,
+  //           data: prodData,
+  //         });
+  //       }
+  //       setCurrentCartItems(itemsData);
+  //     });
+  //   return () => unsub();
+  // }, []);
 
   return (
     <Layout title="Cart | DuskBooks.com" small>
@@ -90,7 +89,7 @@ const Cart: React.FC<Props> = (props) => {
                         as="select"
                         value={item.quantity}
                         onChange={(e) =>
-                          cart.changeItemQuantity(
+                          cart.addOrChangeItem(
                             item.data.isbn13,
                             Number(e.target.value)
                           )
@@ -135,47 +134,22 @@ const Cart: React.FC<Props> = (props) => {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
-    const cookies = nookies.get(ctx);
-    var uid = null;
-    var userData = null;
-    if (cookies.token) {
-      const token = await firebaseAdmin.auth().verifyIdToken(cookies.token);
-      uid = token.uid;
-    } else {
-      ctx.res.writeHead(302, { Location: "/auth" });
-      ctx.res.end();
-      return { props: {} as never };
-    }
+    const uid = await isAuth(ctx.req);
 
-    const itemsSnap = await firebaseAdmin
-      .firestore()
-      .collection("shoppingCarts")
-      .doc(uid)
-      .collection("items")
-      .get();
+    const data = await (
+      await fetch(`${process.env.SERVER}/api/users/${uid}/cart`)
+    ).json();
 
-    let itemsData = [];
-    for (const item of itemsSnap.docs) {
-      const itemData = item.data() as {
-        quantity: number;
-        ref: firebaseAdmin.firestore.DocumentReference;
-      };
-      const prodData = (await itemData.ref.get()).data();
-      itemsData.push({
-        quantity: itemData.quantity,
-        data: prodData,
-      });
-    }
     return {
       props: {
-        cartItems: itemsData,
-        uid,
+        data,
       },
     };
   } catch (error) {
     return {
-      props: {
-        cartItems: { status: false, data: error.message },
+      redirect: {
+        destination: "/",
+        permanent: false,
       },
     };
   }

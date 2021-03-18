@@ -1,15 +1,20 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import firebaseAdmin from "utils/firebaseAdmin";
 import { isAuth } from "utils/functions";
+import firebaseAdmin from "utils/firebaseAdmin";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
+  const { orderId } = req.query;
   if (req.method === "GET") {
     try {
       const uid = await isAuth(req);
-
-      // Get base data
       const data = (
-        await firebaseAdmin.firestore().collection("users").doc(uid).get()
+        await firebaseAdmin
+          .firestore()
+          .collection("users")
+          .doc(uid)
+          .collection("orders")
+          .doc(orderId as string)
+          .get()
       ).data();
 
       res.status(200).json(data);

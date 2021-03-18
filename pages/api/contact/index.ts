@@ -27,16 +27,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
         console.log(error);
-        res.statusCode = 200;
-        res.json({ status: false, data: error });
+        res.status(500).json(error);
       } else {
         console.log("Email sent: " + info.response);
-        res.statusCode = 200;
-        res.json({ status: true, data: info.response });
+        res.status(200).json(info.response);
       }
     });
   } else {
-    res.statusCode = 405;
-    res.end();
+    res.status(405);
   }
 };

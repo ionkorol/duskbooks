@@ -1,31 +1,26 @@
 import React from "react";
 import { GetServerSideProps } from "next";
 import { AccountLayout } from "components/account";
-import { FirebaseUserProp, OrderProp } from "utils/interfaces";
 import { Alert, Table } from "react-bootstrap";
-import { server } from "config";
-
-import nookies from "nookies";
-import firebaseAdmin from "utils/firebaseAdmin";
 
 import styles from "./Order.module.scss";
+import { isAuth } from "utils/functions";
+import { OrderProp } from "utils/interfaces";
 
 interface Props {
-  uid: string;
-  userData: FirebaseUserProp;
-  orderData: OrderProp;
+  data: OrderProp;
 }
 
 const Order: React.FC<Props> = (props) => {
-  const { uid, userData, orderData } = props;
+  const { data } = props;
 
   return (
-    <AccountLayout userData={userData}>
+    <AccountLayout>
       <div className={styles.container}>
         <Alert variant="success">
-          Order #{orderData.id} was placed on{" "}
-          {new Date(orderData.createdAt._seconds * 1000).toDateString()} and is
-          currently {orderData.fulfillmentStatus}
+          Order #{data.id} was placed on{" "}
+          {new Date(data.createdAt * 1000).toDateString()} and is currently{" "}
+          {data.fulfillmentStatus}
         </Alert>
         <h1>Order Details</h1>
         <div className={styles.line}>
@@ -42,7 +37,7 @@ const Order: React.FC<Props> = (props) => {
             </tr>
           </thead>
           <tbody>
-            {orderData.lineItems.map((item) => (
+            {data.lineItems.map((item) => (
               <tr className={styles.product} key={item.data.isbn13}>
                 <td>{item.data.title}</td>
                 <td>${item.data.salePrice}</td>
@@ -56,15 +51,15 @@ const Order: React.FC<Props> = (props) => {
         </Table>
         <div className={styles.line}>
           <span>Subtotal</span>
-          <span>${orderData.itemsTotalPrice}</span>
+          <span>${data.itemsTotalPrice}</span>
         </div>
         <div className={styles.line}>
           <span>Shipping</span>
-          <span>${orderData.shippingPrice}</span>
+          <span>${data.shippingPrice}</span>
         </div>
         <div className={styles.line}>
           <span>Total</span>
-          <span>${orderData.totalPrice}</span>
+          <span>${data.totalPrice}</span>
         </div>
       </div>
     </AccountLayout>
@@ -74,38 +69,23 @@ const Order: React.FC<Props> = (props) => {
 export default Order;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const cookies = nookies.get(ctx);
-
-  if (cookies.token) {
-    var uid = null;
-    var userData = null;
-    const token = await firebaseAdmin.auth().verifyIdToken(cookies.token);
-    uid = token.uid;
-    userData = (
-      await firebaseAdmin.firestore().collection("users").doc(uid).get()
-    ).data();
-
-    const orderId = ctx.query.pid;
-    const res = await fetch(`${server}/api/orders/${orderId}`, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        Cookie: `token=${cookies.token}`,
-      },
-    });
-    const orderData = (await res.json()).data;
+  const { pid } = ctx.query;
+  try {
+    const uid = await isAuth(ctx.req);
+    const data = await (
+      await fetch(`${process.env.SERVER}/api/users/${uid}/orders/${pid}`)
+    ).json();
     return {
       props: {
-        uid,
-        userData,
-        orderData,
+        data,
       },
     };
-  } else {
-    ctx.res.writeHead(302, { Location: "/auth" });
-    ctx.res.end();
+  } catch (error) {
     return {
-      props: {} as never,
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
     };
   }
 };
