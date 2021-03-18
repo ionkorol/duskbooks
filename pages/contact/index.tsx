@@ -1,31 +1,22 @@
-import { GetServerSideProps } from "next";
 import React, { useState } from "react";
 import { Form } from "react-bootstrap";
 import { Layout } from "components/common";
 import { useCompUpdate } from "hooks";
-import { FirebaseUserProp } from "utils/interfaces";
+import { UserProp } from "utils/interfaces";
 import { toast } from "react-toastify";
-
-import firebaseAdmin from "utils/firebaseAdmin";
-import nookies from "nookies";
 
 import styles from "./Contact.module.scss";
 
-interface Props {
-  uid: string;
-  userData: FirebaseUserProp;
-}
+interface Props {}
 
 const Contact: React.FC<Props> = (props) => {
-  const { uid, userData } = props;
-
   return (
     <Layout title="Contact Us | DuskBooks.com">
       <h2 className={styles.title}>Contact Us</h2>
 
       <div className={styles.container}>
         <div className={styles.formContainer}>
-          <ContactForm userData={userData} />
+          <ContactForm />
         </div>
         <div className={styles.infoContainer}>
           <div className={styles.message}>
@@ -50,20 +41,13 @@ const Contact: React.FC<Props> = (props) => {
 };
 export default Contact;
 
-interface CFProps {
-  userData: FirebaseUserProp;
-}
+interface CFProps {}
 
 const ContactForm: React.FC<CFProps> = (props) => {
-  const { userData } = props;
-  console.log(userData);
-
-  const [name, setName] = useState(
-    userData ? userData.firstName + " " + userData.lastName : ""
-  );
+  const [name, setName] = useState("");
   const [nameError, setNameError] = useState(null);
 
-  const [email, setEmail] = useState(userData ? userData.email : "");
+  const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState(null);
 
   const [subject, setSubject] = useState("");
@@ -200,24 +184,4 @@ const ContactForm: React.FC<CFProps> = (props) => {
       </button>
     </Form>
   );
-};
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const cookies = nookies.get(ctx);
-  var uid = null;
-  var userData = null;
-  if (cookies.token) {
-    const token = await firebaseAdmin.auth().verifyIdToken(cookies.token);
-    uid = token.uid;
-    userData = (
-      await firebaseAdmin.firestore().collection("users").doc(uid).get()
-    ).data();
-  }
-
-  return {
-    props: {
-      uid,
-      userData,
-    },
-  };
 };
