@@ -1,14 +1,14 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useCompRender } from "hooks";
-import { AddressProp, BookDataProp, FirebaseUserProp } from "utils/interfaces";
+import { AddressProp, ProductProp, UserProp } from "utils/interfaces";
 import { onRun } from "./functions";
 
 interface Props {
   onPaid: () => any;
-  itemsData: { quantity: number; data: BookDataProp }[];
+  itemsData: { quantity: number; data: ProductProp }[];
   billingAddress: AddressProp;
   shippingAddress: AddressProp;
-  userData: FirebaseUserProp;
+  userData: UserProp;
 }
 
 const Paypal: React.FC<Props> = (props) => {
