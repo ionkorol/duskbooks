@@ -3,7 +3,6 @@ import { Layout } from "components/common";
 
 import styles from "./Search.module.scss";
 import { GetServerSideProps } from "next";
-import { server } from "config";
 
 interface Props {}
 
