@@ -1,12 +1,12 @@
 import firebaseClient from "utils/firebaseClient";
-import { AddressProp, BookDataProp, FirebaseUserProp } from "utils/interfaces";
+import { AddressProp, ProductProp, UserProp } from "utils/interfaces";
 import { CreateOrderObj } from "./interfaces";
 
 export const onRun = async (
   shippingAddress: AddressProp,
   billingAddress: AddressProp,
-  itemsData: { quantity: number; data: BookDataProp }[],
-  userData: FirebaseUserProp,
+  itemsData: { quantity: number; data: ProductProp }[],
+  userData: UserProp,
   onPaid: () => any,
   paypal: React.MutableRefObject<any>
 ) => {
